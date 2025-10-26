@@ -51,6 +51,13 @@ python ed_multi_lif_snn_simple.py --fashion --train 1000 --test 100 --epochs 10
 python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10 --viz --heatmap
 ```
 
+### 図表保存付き学習
+
+```bash
+python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10 --viz --heatmap --save_fig results/
+# 学習進捗グラフとヒートマップをresults/ディレクトリに保存
+```
+
 ## 主要なコマンドライン引数
 
 ### データセット
