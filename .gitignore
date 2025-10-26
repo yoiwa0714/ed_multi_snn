@@ -1,0 +1,40 @@
+# アップロード対象外のファイル
+# アップロードするのは以下の3つのみ:
+# 1. ed_multi_lif_snn.py
+# 2. ed_multi_lif_snn_simple.py
+# 3. modules/
+
+# すべてのファイルをデフォルトで除外
+*
+
+# 必要なファイル・ディレクトリのみ許可
+!.gitignore
+!README.md
+!LICENSE
+!ed_multi_lif_snn.py
+!ed_multi_lif_snn_simple.py
+
+# modulesディレクトリを許可
+!modules/
+!modules/**
+
+# Python関連の除外
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# IDE関連の除外
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS関連の除外
+.DS_Store
+Thumbs.db
