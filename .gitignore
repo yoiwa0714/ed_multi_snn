@@ -1,8 +1,10 @@
 # アップロード対象外のファイル
-# アップロードするのは以下の3つのみ:
+# アップロードするのは以下のみ:
 # 1. ed_multi_lif_snn.py
 # 2. ed_multi_lif_snn_simple.py
 # 3. modules/
+# 4. README.md
+# 5. README_simple.md
 
 # すべてのファイルをデフォルトで除外
 *
@@ -10,6 +12,7 @@
 # 必要なファイル・ディレクトリのみ許可
 !.gitignore
 !README.md
+!README_simple.md
 !LICENSE
 !ed_multi_lif_snn.py
 !ed_multi_lif_snn_simple.py
