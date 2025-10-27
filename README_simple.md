@@ -72,6 +72,8 @@ python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10 --
 - `--epochs N`: エポック数（デフォルト: 10）
 - `--hidden N1,N2,...`: 隠れ層構造（デフォルト: 128）
 - `--batch N`: ミニバッチサイズ（デフォルト: 128）
+- `--seed N`: ランダムシード（デフォルト: ランダム）
+- `--no_shuffle`: データシャッフル無効化
 
 ### ED法ハイパーパラメータ
 
@@ -89,6 +91,14 @@ python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10 --
 - `--v_reset FLOAT`: リセット電位（デフォルト: -65.0 mV）
 - `--tau_m FLOAT`: 膜時定数（デフォルト: 10.0 ms）
 - `--tau_ref FLOAT`: 不応期（デフォルト: 2.0 ms）
+- `--tau_syn_e FLOAT`: 興奮性シナプス時定数（デフォルト: 5.0 ms）
+- `--tau_syn_i FLOAT`: 抑制性シナプス時定数（デフォルト: 10.0 ms）
+- `--dt FLOAT`: 時間ステップ（デフォルト: 1.0 ms）
+- `--R_m FLOAT`: 膜抵抗（デフォルト: 10.0 MΩ）
+- `--spike_encoding METHOD`: スパイク符号化方法（デフォルト: poisson）
+- `--spike_max_rate FLOAT`: 最大発火率 Hz（デフォルト: 100.0）
+- `--spike_sim_time FLOAT`: スパイクシミュレーション時間 ms（デフォルト: 50.0）
+- `--spike_dt FLOAT`: スパイク時間刻み ms（デフォルト: 1.0）
 
 ### 可視化
 
@@ -98,7 +108,8 @@ python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10 --
 ### その他
 
 - `--cpu`: CPU強制実行
-- `--no_shuffle`: データシャッフル無効化
+- `--verbose`: 詳細ログ表示
+- `--verify_acc_loss`: 精度・誤差の検証レポートを表示
 
 ## 学習のポイント
 

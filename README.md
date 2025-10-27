@@ -115,6 +115,8 @@ python ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10 --viz --h
 - `--epochs N`: エポック数（デフォルト: 10）
 - `--hidden N1,N2,...`: 隠れ層構造（デフォルト: 128）
 - `--batch N`: ミニバッチサイズ（デフォルト: 128）
+- `--seed N`: ランダムシード（デフォルト: ランダム）
+- `--no_shuffle`: データシャッフル無効化
 
 ### ED法ハイパーパラメータ
 
@@ -134,6 +136,11 @@ python ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10 --viz --h
 - `--tau_ref FLOAT`: 不応期（デフォルト: 2.0 ms）
 - `--simulation_time FLOAT`: シミュレーション時間（デフォルト: 50.0 ms）
 - `--dt FLOAT`: 時間ステップ（デフォルト: 1.0 ms）
+- `--R_m FLOAT`: 膜抵抗（デフォルト: 10.0 MΩ）
+- `--spike_encoding METHOD`: スパイク符号化方法（デフォルト: poisson）
+- `--spike_max_rate FLOAT`: 最大発火率 Hz（デフォルト: 100.0）
+- `--spike_sim_time FLOAT`: スパイクシミュレーション時間 ms（デフォルト: 50.0）
+- `--spike_dt FLOAT`: スパイク時間刻み ms（デフォルト: 1.0）
 
 ### 可視化
 
@@ -144,8 +151,8 @@ python ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10 --viz --h
 ### その他
 
 - `--cpu`: CPU強制実行（GPU環境でも）
-- `--no_shuffle`: データシャッフル無効化
 - `--verbose`: 詳細ログ表示
+- `--verify_acc_loss`: 精度・誤差の検証レポートを表示
 
 ## 必要な環境
 
