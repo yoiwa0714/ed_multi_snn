@@ -524,6 +524,11 @@ Repository: https://github.com/yoiwa0714/ed_multi_snn
         train_group.add_argument('--batch', type=int, default=self.batch_size,
                                 metavar='N',
                                 help=f'ミニバッチサイズ（デフォルト: {self.batch_size}）')
+        train_group.add_argument('--seed', type=int, default=self.random_seed,
+                                metavar='N',
+                                help='ランダムシード（デフォルト: ランダム）')
+        train_group.add_argument('--no_shuffle', action='store_true',
+                                help='データシャッフル無効化')
         
         # === ED法ハイパーパラメータ ===
         ed_group = parser.add_argument_group('ED法ハイパーパラメータ')
@@ -569,6 +574,26 @@ Repository: https://github.com/yoiwa0714/ed_multi_snn
         lif_group.add_argument('--dt', type=float, default=self.dt,
                               metavar='FLOAT',
                               help=f'時間ステップ（デフォルト: {self.dt} ms）')
+        lif_group.add_argument('--R_m', '--membrane_resistance', type=float, default=self.R_m,
+                              metavar='FLOAT',
+                              help=f'膜抵抗（デフォルト: {self.R_m} MΩ）')
+        lif_group.add_argument('--spike_encoding', '--encoding', type=str, 
+                              default=self.spike_encoding_method,
+                              choices=['poisson', 'rate', 'temporal'],
+                              metavar='METHOD',
+                              help=f'スパイク符号化方法（デフォルト: {self.spike_encoding_method}）')
+        lif_group.add_argument('--spike_max_rate', '--max_rate', type=float, 
+                              default=self.spike_max_rate,
+                              metavar='FLOAT',
+                              help=f'最大発火率 Hz（デフォルト: {self.spike_max_rate}）')
+        lif_group.add_argument('--spike_sim_time', type=float, 
+                              default=self.spike_simulation_time,
+                              metavar='FLOAT',
+                              help=f'スパイクシミュレーション時間 ms（デフォルト: {self.spike_simulation_time}）')
+        lif_group.add_argument('--spike_dt', type=float, 
+                              default=self.spike_dt,
+                              metavar='FLOAT',
+                              help=f'スパイク時間刻み ms（デフォルト: {self.spike_dt}）')
         
         # === 可視化 ===
         viz_group = parser.add_argument_group('可視化')
@@ -584,38 +609,10 @@ Repository: https://github.com/yoiwa0714/ed_multi_snn
         other_group = parser.add_argument_group('その他')
         other_group.add_argument('--cpu', action='store_true', default=self.force_cpu,
                                 help='CPU強制実行（GPU環境でも）')
-        other_group.add_argument('--no_shuffle', action='store_true',
-                                help='データシャッフル無効化')
         other_group.add_argument('--verbose', '--v', action='store_true', default=self.verbose,
                                 help='詳細ログ表示')
-        
-        # === 高度なオプション（README.mdに記載されていない） ===
-        advanced_group = parser.add_argument_group('高度なオプション')
-        advanced_group.add_argument('--seed', type=int, default=self.random_seed,
-                                   metavar='N',
-                                   help='ランダムシード（デフォルト: ランダム）')
-        advanced_group.add_argument('--R_m', '--membrane_resistance', type=float, default=self.R_m,
-                                   metavar='FLOAT',
-                                   help=f'膜抵抗（デフォルト: {self.R_m} MΩ）')
-        advanced_group.add_argument('--spike_encoding', '--encoding', type=str, 
-                                   default=self.spike_encoding_method,
-                                   choices=['poisson', 'rate', 'temporal'],
-                                   metavar='METHOD',
-                                   help=f'スパイク符号化方法（デフォルト: {self.spike_encoding_method}）')
-        advanced_group.add_argument('--spike_max_rate', '--max_rate', type=float, 
-                                   default=self.spike_max_rate,
-                                   metavar='FLOAT',
-                                   help=f'最大発火率 Hz（デフォルト: {self.spike_max_rate}）')
-        advanced_group.add_argument('--spike_sim_time', type=float, 
-                                   default=self.spike_simulation_time,
-                                   metavar='FLOAT',
-                                   help=f'スパイクシミュレーション時間 ms（デフォルト: {self.spike_simulation_time}）')
-        advanced_group.add_argument('--spike_dt', type=float, 
-                                   default=self.spike_dt,
-                                   metavar='FLOAT',
-                                   help=f'スパイク時間刻み ms（デフォルト: {self.spike_dt}）')
-        advanced_group.add_argument('--verify_acc_loss', action='store_true', default=False,
-                                   help='精度・誤差の検証レポートを表示')
+        other_group.add_argument('--verify_acc_loss', action='store_true', default=False,
+                                help='精度・誤差の検証レポートを表示')
         
         # 引数解析
         parsed_args = parser.parse_args(args)
@@ -685,6 +682,7 @@ Repository: https://github.com/yoiwa0714/ed_multi_snn
         self.no_shuffle = parsed_args.no_shuffle
         
         return parsed_args
+
 
 
 
