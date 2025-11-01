@@ -1,10 +1,15 @@
 # ED-Multi SNN Simple - 教育用サンプル版
 
-`ed_multi_lif_snn_simple.py`は、ED-Multi SNNの学習プロセスを理解しやすくした教育用サンプル版です。
+`ed_multi_lif_snn_simple.py`は、ED-Multi SNNの学習プロセスを理解しやすくした実装学習用サンプル版です。
 
 ## 概要
 
 このサンプル版は、メインプログラム（`ed_multi_lif_snn.py`）のコア機能を保ちながら、学習者が理解しやすいようにシンプル化されています。ED法の基本原理とSNNの動作を学ぶのに最適です。
+
+## ED法の詳細
+
+ED法(Error-Diffusion法)とは、故金子勇氏が1999年に考案された、「微分の連鎖律を用いた誤差逆伝播法」を用いない生物学的に妥当な多層ニューラルネットワークの学習方法です。<br>
+ED法の詳細については、[ED法_解説資料.md](docs/ED法_解説資料.md)をご覧ください。
 
 ## メインプログラムとの違い
 
@@ -81,15 +86,15 @@ python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10 --
 - `--ami FLOAT`: アミン濃度（デフォルト: 0.25）
 - `--dif FLOAT`: 拡散係数（デフォルト: 0.5）
 - `--sig FLOAT`: シグモイド閾値（デフォルト: 1.2）
-- `--w1 FLOAT`: 重み初期値1（デフォルト: 1.0）
-- `--w2 FLOAT`: 重み初期値2（デフォルト: 1.0）
+- `--w1 FLOAT`: 重み初期値1（デフォルト: 0.3）
+- `--w2 FLOAT`: 重み初期値2（デフォルト: 0.5）
 
 ### LIFニューロンパラメータ
 
 - `--v_rest FLOAT`: 静止膜電位（デフォルト: -65.0 mV）
-- `--v_threshold FLOAT`: 発火閾値（デフォルト: -50.0 mV）
-- `--v_reset FLOAT`: リセット電位（デフォルト: -65.0 mV）
-- `--tau_m FLOAT`: 膜時定数（デフォルト: 10.0 ms）
+- `--v_threshold FLOAT`: 発火閾値（デフォルト: -60.0 mV）
+- `--v_reset FLOAT`: リセット電位（デフォルト: -70.0 mV）
+- `--tau_m FLOAT`: 膜時定数（デフォルト: 20.0 ms）
 - `--tau_ref FLOAT`: 不応期（デフォルト: 2.0 ms）
 - `--tau_syn_e FLOAT`: 興奮性シナプス時定数（デフォルト: 5.0 ms）
 - `--tau_syn_i FLOAT`: 抑制性シナプス時定数（デフォルト: 10.0 ms）
@@ -167,16 +172,19 @@ w *= ow[source] * ow[target]
 ### 推奨学習順序
 
 1. **基本実行**: まずデフォルト設定で実行
+
    ```bash
    python ed_multi_lif_snn_simple.py --mnist --train 100 --test 10 --epochs 3
    ```
 
 2. **可視化確認**: 学習過程を可視化
+
    ```bash
    python ed_multi_lif_snn_simple.py --mnist --train 100 --test 10 --epochs 3 --viz
    ```
 
 3. **パラメータ変更**: 各パラメータの影響を確認
+
    ```bash
    # 学習率を変えてみる
    python ed_multi_lif_snn_simple.py --mnist --train 100 --test 10 --epochs 3 --lr 0.05
@@ -186,13 +194,14 @@ w *= ow[source] * ow[target]
    ```
 
 4. **ネットワーク構造変更**: 多層構造を試す
+
    ```bash
    python ed_multi_lif_snn_simple.py --mnist --train 100 --test 10 --epochs 3 --hidden 64,32
    ```
 
 ### コード内の重要セクション
 
-1. **データ前処理**: E/Iペア化の実装
+1. **データ前処理**: E/Iペア化の実装 (E: 興奮性ニューロン、I: 抑制性ニューロン)
 2. **LIFニューロン**: スパイク発火の実装
 3. **ED法学習**: 重み更新の実装
 4. **Dale's Principle**: 重み符号制約の実装
@@ -242,18 +251,21 @@ pip install cupy-cuda11x  # CUDA 11.x用
 ### よくある問題
 
 1. **メモリ不足**
+
    ```bash
    # サンプル数を減らす
    python ed_multi_lif_snn_simple.py --mnist --train 100 --test 10 --epochs 3
    ```
 
 2. **学習が進まない**
+
    ```bash
    # 学習率を調整
    python ed_multi_lif_snn_simple.py --mnist --train 100 --test 10 --epochs 3 --lr 0.05
    ```
 
 3. **GPU使用時のエラー**
+
    ```bash
    # CPUで実行
    python ed_multi_lif_snn_simple.py --mnist --train 100 --test 10 --epochs 3 --cpu
@@ -262,8 +274,13 @@ pip install cupy-cuda11x  # CUDA 11.x用
 ## 参考資料
 
 - **README.md**: メイン版の詳細説明
-- **ed_multi_snn.prompt.md**: 実装の設計指針
-- **modules/**: 各モジュールの実装
+- **TECHNICAL_DOCS.md**: 技術実装詳細
+- **USAGE.md**: 使用方法詳細
+- **modules/**: 必要最小限のモジュール実装
+  - `data_loader.py`: データローダー
+  - `accuracy_loss_verifier.py`: 正答率・誤差検証
+  - `snn_heatmap_integration.py`: ヒートマップ統合
+  - `snn/lif_neuron.py`: LIFニューロン実装
 
 ## ライセンス
 
@@ -278,4 +295,5 @@ Public Release Version (2025-10-26)
 
 ## サポート
 
-問題や質問がある場合は、GitHubのIssuesでお知らせください。
+問題や質問がある場合は、GitHubのIssuesでお知らせください。<br>
+可能な範囲で対応いたします。

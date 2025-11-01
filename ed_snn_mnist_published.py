@@ -450,6 +450,7 @@ class HyperParams:
         self.enable_visualization = False  # リアルタイム可視化
         self.enable_heatmap = False        # ヒートマップ可視化
         self.verbose = False          # 詳細表示
+        self.quiet_mode = False       # 簡潔出力モード [SNN未実装]
         self.enable_profiling = False # プロファイリング [SNN未実装]
         self.force_cpu = False        # CPU強制実行 [SNN未実装]
         self.fashion_mnist = True     # Fashion-MNIST使用 - シミュレーション最適化
@@ -479,171 +480,162 @@ class HyperParams:
             self.output_size = 10
     
     def parse_args(self, args=None):
-        """コマンドライン引数解析（README.md完全準拠）"""
+        """コマンドライン引数解析（ed_v032_simple.py準拠）"""
         import argparse
         
         parser = argparse.ArgumentParser(
-            description='ED-Multi SNN - スパイキングニューラルネットワークのための純粋ED法実装',
+            description='ED-SNN v015 HyperParams統一版 - ed_v032_simple準拠',
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
 ED法ハイパーパラメータ説明:
   学習率(alpha): ニューロンの学習強度を制御
-  アミン濃度(beta): 初期誤差信号の強度
-  拡散係数(u1): アミン（誤差信号）の拡散率
-  シグモイド閾値(u0): 活性化関数の感度
-  重み初期値1(w1): 興奮性ニューロンの初期重み
-  重み初期値2(w2): 抑制性ニューロンの初期重み
+  アミン濃度(beta): 初期誤差信号の強度 [SNN未実装]
+  拡散係数(u1): アミン（誤差信号）の拡散率 [SNN未実装]
+  シグモイド閾値(u0): 活性化関数の感度 [SNN未実装]
+  
+[SNN未実装]マークのパラメータ:
+  将来の実装のためのダミーパラメータです。
+  現在は指定しても効果はありませんが、ed_v032_simpleとの
+  コマンドライン互換性を保つために用意されています。
 
 Original Algorithm: 金子勇 (1999)
 Implementation: ed_multi_snn.prompt.md準拠
-Repository: https://github.com/yoiwa0714/ed_multi_snn
             """
         )
         
-        # === データセット ===
-        dataset_group = parser.add_argument_group('データセット')
-        dataset_group.add_argument('--mnist', action='store_true',
-                                   help='MNISTデータセット使用（デフォルト）')
-        dataset_group.add_argument('--fashion', action='store_true', default=self.fashion_mnist,
-                                   help='Fashion-MNISTデータセット使用')
+        # === ED法アルゴリズムパラメータ ===
+        ed_group = parser.add_argument_group('ED法アルゴリズムパラメータ')
+        ed_group.add_argument('--learning_rate', '--lr', type=float, default=self.learning_rate,
+                             help=f'学習率 alpha (デフォルト: {self.learning_rate})')
+        ed_group.add_argument('--amine', '--ami', type=float, default=self.initial_amine,
+                             help=f'初期アミン濃度 beta (デフォルト: {self.initial_amine}) [多層学習で重要]')
+        ed_group.add_argument('--diffusion', '--dif', type=float, default=self.diffusion_rate,
+                             help=f'アミン拡散係数 u1 (デフォルト: {self.diffusion_rate}) [多層学習で重要]')
+        ed_group.add_argument('--sigmoid', '--sig', type=float, default=self.sigmoid_threshold,
+                             help=f'シグモイド閾値 u0 (デフォルト: {self.sigmoid_threshold}) [多層学習で重要]')
+        ed_group.add_argument('--weight1', '--w1', type=float, default=self.initial_weight_1,
+                             help=f'重み初期値1 (デフォルト: {self.initial_weight_1}) [興奮性ニューロン]')
+        ed_group.add_argument('--weight2', '--w2', type=float, default=self.initial_weight_2,
+                             help=f'重み初期値2 (デフォルト: {self.initial_weight_2}) [抑制性ニューロン]')
         
-        # === 学習設定 ===
-        train_group = parser.add_argument_group('学習設定')
-        train_group.add_argument('--train', type=int, default=self.train_samples,
-                                metavar='N',
-                                help=f'訓練サンプル数（デフォルト: {self.train_samples}）')
-        train_group.add_argument('--test', type=int, default=self.test_samples,
-                                metavar='N',
-                                help=f'テストサンプル数（デフォルト: {self.test_samples}）')
-        train_group.add_argument('--epochs', type=int, default=self.epochs,
-                                metavar='N',
-                                help=f'エポック数（デフォルト: {self.epochs}）')
-        train_group.add_argument('--hidden', type=str, default=','.join(map(str, self.hidden_layers)),
-                                metavar='N1,N2,...',
-                                help=f'隠れ層構造（デフォルト: {",".join(map(str, self.hidden_layers))}）')
-        train_group.add_argument('--batch', type=int, default=self.batch_size,
-                                metavar='N',
-                                help=f'ミニバッチサイズ（デフォルト: {self.batch_size}）')
-        train_group.add_argument('--seed', type=int, default=self.random_seed,
-                                metavar='N',
-                                help='ランダムシード（デフォルト: ランダム）')
-        train_group.add_argument('--no_shuffle', action='store_true',
-                                help='データシャッフル無効化')
-        
-        # === ED法ハイパーパラメータ ===
-        ed_group = parser.add_argument_group('ED法ハイパーパラメータ')
-        ed_group.add_argument('--lr', type=float, default=self.learning_rate,
-                             metavar='FLOAT',
-                             help=f'学習率 (alpha) - ニューロンの学習強度を制御（デフォルト: {self.learning_rate}）')
-        ed_group.add_argument('--ami', type=float, default=self.initial_amine,
-                             metavar='FLOAT',
-                             help=f'アミン濃度 (beta) - 初期誤差信号の強度（デフォルト: {self.initial_amine}）')
-        ed_group.add_argument('--dif', type=float, default=self.diffusion_rate,
-                             metavar='FLOAT',
-                             help=f'拡散係数 (u1) - アミン（誤差信号）の拡散率（デフォルト: {self.diffusion_rate}）')
-        ed_group.add_argument('--sig', type=float, default=self.sigmoid_threshold,
-                             metavar='FLOAT',
-                             help=f'シグモイド閾値 (u0) - 活性化関数の感度（デフォルト: {self.sigmoid_threshold}）')
-        ed_group.add_argument('--w1', type=float, default=self.initial_weight_1,
-                             metavar='FLOAT',
-                             help=f'重み初期値1 - 興奮性ニューロンの初期重み（デフォルト: {self.initial_weight_1}）')
-        ed_group.add_argument('--w2', type=float, default=self.initial_weight_2,
-                             metavar='FLOAT',
-                             help=f'重み初期値2 - 抑制性ニューロンの初期重み（デフォルト: {self.initial_weight_2}）')
-        
-        # === LIFニューロンパラメータ ===
-        lif_group = parser.add_argument_group('LIFニューロンパラメータ')
+        # === LIFニューロンパラメータ（v570準拠、新規追加） ===
+        lif_group = parser.add_argument_group('LIFニューロンパラメータ（v019新規追加）')
         lif_group.add_argument('--v_rest', type=float, default=self.v_rest,
-                              metavar='FLOAT',
-                              help=f'静止膜電位（デフォルト: {self.v_rest} mV）')
+                              help=f'静止膜電位 (デフォルト: {self.v_rest} mV) [LIFニューロン]')
         lif_group.add_argument('--v_threshold', '--v_thresh', type=float, default=self.v_threshold,
-                              metavar='FLOAT',
-                              help=f'発火閾値（デフォルト: {self.v_threshold} mV）')
+                              help=f'発火閾値 (デフォルト: {self.v_threshold} mV) [LIFニューロン]')
         lif_group.add_argument('--v_reset', type=float, default=self.v_reset,
-                              metavar='FLOAT',
-                              help=f'リセット電位（デフォルト: {self.v_reset} mV）')
+                              help=f'リセット電位 (デフォルト: {self.v_reset} mV) [LIFニューロン]')
         lif_group.add_argument('--tau_m', '--tau_mem', type=float, default=self.tau_m,
-                              metavar='FLOAT',
-                              help=f'膜時定数（デフォルト: {self.tau_m} ms）')
+                              help=f'膜時定数 (デフォルト: {self.tau_m} ms) [LIFニューロン]')
         lif_group.add_argument('--tau_ref', '--tau_refractory', type=float, default=self.tau_ref,
-                              metavar='FLOAT',
-                              help=f'不応期（デフォルト: {self.tau_ref} ms）')
-        lif_group.add_argument('--simulation_time', '--sim_time', type=float, default=self.simulation_time,
-                              metavar='FLOAT',
-                              help=f'シミュレーション時間（デフォルト: {self.simulation_time} ms）')
+                              help=f'不応期 (デフォルト: {self.tau_ref} ms) [LIFニューロン]')
         lif_group.add_argument('--dt', type=float, default=self.dt,
-                              metavar='FLOAT',
-                              help=f'時間ステップ（デフォルト: {self.dt} ms）')
+                              help=f'時間ステップ (デフォルト: {self.dt} ms) [LIFニューロン]')
         lif_group.add_argument('--R_m', '--membrane_resistance', type=float, default=self.R_m,
-                              metavar='FLOAT',
-                              help=f'膜抵抗（デフォルト: {self.R_m} MΩ）')
+                              help=f'膜抵抗 (デフォルト: {self.R_m} MΩ) [LIFニューロン]')
+        lif_group.add_argument('--sim_time', '--simulation_time', type=float, default=self.simulation_time,
+                              help=f'シミュレーション時間 (デフォルト: {self.simulation_time} ms) [LIFニューロン]')
+        lif_group.add_argument('--enable_lif', action='store_true',
+                              help='LIF層を有効化（デフォルト: 無効） [v019 Phase 4新機能]')
+        
+        # === Step 3a: 入力層LIF統合パラメータ（v025新規追加） ===
+        lif_group.add_argument('--use_input_lif', action='store_true',
+                              help='入力層LIFを有効化（デフォルト: 無効） [v025 Step 3a新機能]')
         lif_group.add_argument('--spike_encoding', '--encoding', type=str, 
                               default=self.spike_encoding_method,
                               choices=['poisson', 'rate', 'temporal'],
-                              metavar='METHOD',
-                              help=f'スパイク符号化方法（デフォルト: {self.spike_encoding_method}）')
+                              help=f'スパイク符号化方法 (デフォルト: {self.spike_encoding_method}) [v025 Step 3a]')
         lif_group.add_argument('--spike_max_rate', '--max_rate', type=float, 
                               default=self.spike_max_rate,
-                              metavar='FLOAT',
-                              help=f'最大発火率 Hz（デフォルト: {self.spike_max_rate}）')
+                              help=f'最大発火率 Hz (デフォルト: {self.spike_max_rate}) [v025 Step 3a]')
         lif_group.add_argument('--spike_sim_time', type=float, 
                               default=self.spike_simulation_time,
-                              metavar='FLOAT',
-                              help=f'スパイクシミュレーション時間 ms（デフォルト: {self.spike_simulation_time}）')
+                              help=f'スパイクシミュレーション時間 ms (デフォルト: {self.spike_simulation_time}) [v025 Step 3a]')
         lif_group.add_argument('--spike_dt', type=float, 
                               default=self.spike_dt,
-                              metavar='FLOAT',
-                              help=f'スパイク時間刻み ms（デフォルト: {self.spike_dt}）')
+                              help=f'スパイク時間刻み ms (デフォルト: {self.spike_dt}) [v025 Step 3a]')
         
-        # === 可視化 ===
-        viz_group = parser.add_argument_group('可視化')
-        viz_group.add_argument('--viz', action='store_true', default=self.enable_visualization,
-                              help='リアルタイム学習進捗表示')
-        viz_group.add_argument('--heatmap', action='store_true', default=False,
-                              help='スパイク活動ヒートマップ表示')
-        viz_group.add_argument('--save_fig', nargs='?', const='images', default=None,
-                              metavar='DIR',
-                              help='図表保存ディレクトリ指定')
+        # === 実行時設定パラメータ ===
+        exec_group = parser.add_argument_group('実行時設定パラメータ')
+        exec_group.add_argument('--train_samples', '--train', type=int, default=self.train_samples,
+                               help=f'訓練データ数 (デフォルト: {self.train_samples})')
+        exec_group.add_argument('--test_samples', '--test', type=int, default=self.test_samples,
+                               help=f'テストデータ数 (デフォルト: {self.test_samples})')
+        exec_group.add_argument('--epochs', '--epo', type=int, default=self.epochs,
+                               help=f'エポック数 (デフォルト: {self.epochs})')
+        exec_group.add_argument('--hidden', '--hid', type=str, default=','.join(map(str, self.hidden_layers)),
+                               help=f'隠れ層構造 (デフォルト: {",".join(map(str, self.hidden_layers))}) - カンマ区切り指定 (例: 256,128,64)')
+        exec_group.add_argument('--batch_size', '--batch', type=int, default=self.batch_size,
+                               help=f'ミニバッチサイズ (デフォルト: {self.batch_size})')
+        exec_group.add_argument('--seed', type=int, default=self.random_seed,
+                               help='ランダムシード (デフォルト: ランダム)')
+        exec_group.add_argument('--viz', action='store_true', default=self.enable_visualization,
+                               help='リアルタイム可視化を有効化 (デフォルト: 無効)')
+        exec_group.add_argument('--heatmap', action='store_true', default=False,
+                               help='リアルタイムヒートマップ可視化を有効化 (デフォルト: 無効)')
+        exec_group.add_argument('--verbose', '--v', action='store_true', default=self.verbose,
+                               help='詳細表示を有効化 (デフォルト: 無効)')
+        exec_group.add_argument('--quiet', '--q', action='store_true', default=False,
+                               help='簡潔出力モード - グリッドサーチ用 (デフォルト: 無効) [SNN未実装]')
+        exec_group.add_argument('--cpu', action='store_true', default=self.force_cpu,
+                               help='CPU強制実行モード: GPU環境でもCPU（NumPy）で実行。'
+                                    'デバッグ、性能比較、GPU未搭載環境での動作確認に使用。'
+                                    'ed_multi_snn.prompt.md拡張機能7準拠 (デフォルト: GPU自動検出)')
+        exec_group.add_argument('--fashion', action='store_true', default=self.fashion_mnist,
+                               help='Fashion-MNISTデータセット使用 (デフォルト: 有効)')
+        exec_group.add_argument('--mnist', action='store_true',
+                               help='通常MNISTデータセット使用 (--fashionの反対)')
+        exec_group.add_argument('--save_fig', nargs='?', const='images', default=None,
+                               help='図表保存を有効化 (引数なし: ./images, 引数あり: 指定ディレクトリ) ファイル名: realtime_viz_result_YYYYMMDD_HHMMSS.png')
+        exec_group.add_argument('--verify_acc_loss', action='store_true', default=False,
+                               help='精度・誤差の検証レポートを表示 (デフォルト: 無効)')
+        exec_group.add_argument('--no_shuffle', action='store_true',
+                               help='データシャッフルを無効化 (デフォルト: 有効)')
         
-        # === その他 ===
-        other_group = parser.add_argument_group('その他')
-        other_group.add_argument('--cpu', action='store_true', default=self.force_cpu,
-                                help='CPU強制実行（GPU環境でも）')
-        other_group.add_argument('--verbose', '--v', action='store_true', default=self.verbose,
-                                help='詳細ログ表示')
-        other_group.add_argument('--verify_acc_loss', action='store_true', default=False,
-                                help='精度・誤差の検証レポートを表示')
+        # === 重み管理オプション [SNN未実装] ===
+        weight_group = parser.add_argument_group('重み管理オプション [SNN未実装]')
+        weight_group.add_argument('--save_weights', type=str, default=None,
+                                 help='学習完了後に重みを指定ファイルに保存 (例: --save_weights trained_model.npz)')
+        weight_group.add_argument('--load_weights', type=str, default=None,
+                                 help='指定ファイルから重みを読み込み (例: --load_weights trained_model.npz)')
+        weight_group.add_argument('--test_only', action='store_true',
+                                 help='学習をスキップし、読み込み重みでテストのみ実行 (--load_weightsと併用)')
+        weight_group.add_argument('--continue_training', action='store_true',
+                                 help='読み込み重みから追加学習を継続 (--load_weightsと併用)')
         
         # 引数解析
         parsed_args = parser.parse_args(args)
         
         # パラメータ値の更新
-        self.learning_rate = parsed_args.lr
-        self.initial_amine = parsed_args.ami
-        self.diffusion_rate = parsed_args.dif
-        self.sigmoid_threshold = parsed_args.sig
-        self.initial_weight_1 = parsed_args.w1
-        self.initial_weight_2 = parsed_args.w2
+        self.learning_rate = parsed_args.learning_rate
+        self.initial_amine = parsed_args.amine
+        self.diffusion_rate = parsed_args.diffusion
+        self.sigmoid_threshold = parsed_args.sigmoid
+        self.initial_weight_1 = parsed_args.weight1
+        self.initial_weight_2 = parsed_args.weight2
         
-        # LIFニューロンパラメータ
+        # LIFニューロンパラメータ（v019新規追加）
         self.v_rest = parsed_args.v_rest
         self.v_threshold = parsed_args.v_threshold
         self.v_reset = parsed_args.v_reset
         self.tau_m = parsed_args.tau_m
         self.tau_ref = parsed_args.tau_ref
         self.dt = parsed_args.dt
-        self.simulation_time = parsed_args.simulation_time
         self.R_m = parsed_args.R_m
+        self.simulation_time = parsed_args.sim_time
+        self.enable_lif = parsed_args.enable_lif  # v019 Phase 4追加
         
-        # スパイク符号化パラメータ
+        # Step 3a: 入力層LIF統合パラメータ（v025新規追加）
+        self.use_input_lif = parsed_args.use_input_lif
         self.spike_encoding_method = parsed_args.spike_encoding
         self.spike_max_rate = parsed_args.spike_max_rate
         self.spike_simulation_time = parsed_args.spike_sim_time
         self.spike_dt = parsed_args.spike_dt
         
-        # 学習設定パラメータ
-        self.train_samples = parsed_args.train
-        self.test_samples = parsed_args.test
+        # 実行時設定パラメータ
+        self.train_samples = parsed_args.train_samples
+        self.test_samples = parsed_args.test_samples
         self.epochs = parsed_args.epochs
         
         # 隠れ層構造の解析
@@ -659,13 +651,14 @@ Repository: https://github.com/yoiwa0714/ed_multi_snn
         else:
             self.hidden_layers = [parsed_args.hidden]
         
-        self.batch_size = parsed_args.batch
+        self.batch_size = parsed_args.batch_size
         self.random_seed = parsed_args.seed
         self.enable_visualization = parsed_args.viz
         self.enable_heatmap = parsed_args.heatmap
         self.verbose = parsed_args.verbose
+        self.quiet_mode = parsed_args.quiet
         self.force_cpu = parsed_args.cpu
-        self.verify_acc_loss = parsed_args.verify_acc_loss
+        self.verify_acc_loss = parsed_args.verify_acc_loss  # 検証レポート表示
         
         # データセット選択フラグ処理（優先順位: MNIST > Fashion-MNIST）
         if hasattr(parsed_args, 'mnist') and parsed_args.mnist:
@@ -681,9 +674,13 @@ Repository: https://github.com/yoiwa0714/ed_multi_snn
         self.save_fig = getattr(parsed_args, 'save_fig', None)
         self.no_shuffle = parsed_args.no_shuffle
         
+        # 重み管理オプション
+        self.save_weights = getattr(parsed_args, 'save_weights', None)
+        self.load_weights = getattr(parsed_args, 'load_weights', None)
+        self.test_only = getattr(parsed_args, 'test_only', False)
+        self.continue_training = getattr(parsed_args, 'continue_training', False)
+        
         return parsed_args
-
-
 
 
 # matplotlib バックエンド設定（ed_v032_simple.py準拠）
@@ -1865,8 +1862,7 @@ class MultiLayerEDCore:
         # ========================================
         # v025 Step 3a: 入力層LIF統合
         # ========================================
-        # 全層LIF化（入力層+隠れ層+出力層 - 常に有効）
-        if True:  # 旧: if self.hp.use_input_lif
+        if self.hp is not None and self.hp.use_input_lif:
             # Step 3a: 生物学的妥当性の高い入力層LIF処理
             # 画素値 [784] → スパイク列 [n_timesteps, 784] → E/Iペア [n_timesteps, 1568] 
             #   → 入力層LIF → 発火率 [1568] → 隠れ層伝播
@@ -1926,10 +1922,66 @@ class MultiLayerEDCore:
             
             return outputs
         
-        # v019 Phase 12: LIF層使用時の条件分岐（True  # 全層LIF化により常に有効のみで判定）
+        # v019 Phase 12: LIF層使用時の条件分岐（hp.enable_lifのみで判定）
         # v025 Step 2a/2b: 隠れ層・出力層LIF化
-        # （到達不能 - use_input_lifが常にTrueのため）
-
+        elif self.hp is not None and self.hp.enable_lif:
+            # ========================================
+            # Step 2a/2b: 隠れ層・出力層LIF化処理
+            # ========================================
+            
+            # 入力層は従来通り（E/Iペア化済み画素値 [1568]）
+            # 隠れ層・出力層でLIF活性化関数を使用（シグモイドの代替）
+            
+            # GPU対応: 入力データをGPUに転送（1回のみ）
+            if self.use_gpu:
+                inputs_gpu = self.xp.asarray(inputs)
+            else:
+                inputs_gpu = inputs
+            
+            for n in range(self.output_units):
+                for t in range(self.time_loops):
+                    layer_outputs = []
+                    current_layer_output = inputs_gpu.copy() if self.use_gpu else inputs.copy()
+                    
+                    for layer_idx, layer_weight in enumerate(self.layer_weights[n]):
+                        # 重み行列積
+                        linear_out = layer_weight @ current_layer_output
+                        
+                        # ★Step 2a/2b: LIF活性化関数を使用（シグモイドの代替）
+                        # 隠れ層・出力層のニューロンタイプを取得
+                        if layer_idx < len(self.hidden_neuron_types):
+                            # 隠れ層
+                            neuron_types = self.hidden_neuron_types[layer_idx]
+                            layer_size = self.hidden_sizes[layer_idx]
+                        else:
+                            # 出力層
+                            neuron_types = np.array([self.output_neuron_types[n]])
+                            layer_size = 1
+                        
+                        # LIF活性化（Step 1メソッド使用）
+                        activated = self._lif_activation(
+                            inputs=linear_out,
+                            layer_size=layer_size,
+                            neuron_types=neuron_types,
+                            simulation_time=self.hp.simulation_time,
+                            dt=self.hp.dt
+                        )
+                        
+                        # GPU→CPUに戻す（layer_outputsはNumPy配列として保存）
+                        if self.use_gpu:
+                            layer_outputs.append(np.array(activated) if not hasattr(activated, 'get') else activated.get())
+                        else:
+                            layer_outputs.append(activated)
+                        
+                        current_layer_output = activated
+                    
+                    if t == self.time_loops - 1:
+                        self.layer_outputs[n] = layer_outputs
+                
+                outputs[n] = self.layer_outputs[n][-1][0]
+            
+            return outputs
+        
         else:
             # ========================================
             # 従来のシグモイドベース順伝播処理（Phase 13修正 + GPU最適化）
@@ -2182,13 +2234,7 @@ def main():
     print(f"  時間ステップ (dt):      {hp.dt:.1f} ms")
     print(f"  膜抵抗 (R_m):           {hp.R_m:.1f} MΩ")
     print(f"  シミュレーション時間:   {hp.simulation_time:.1f} ms")
-    print(f"  LIF層使用:              有効 (全層LIF化)")
-    print(f"    - 入力層:             LIF + スパイク符号化")
-    print(f"    - 隠れ層・出力層:     LIF活性化関数")
-    print(f"  スパイク符号化方式:     {hp.spike_encoding_method}")
-    print(f"  スパイク最大発火率:     {hp.spike_max_rate} Hz")
-    print(f"  スパイクシミュレーション時間: {hp.spike_simulation_time} ms")
-    print(f"  スパイク時間ステップ:   {hp.spike_dt} ms")
+    print(f"  LIF層使用:              {'有効' if hp.enable_lif else '無効'} [v019 Phase 4]")
     print()
     print("【実行時設定パラメータ】")
     # データセット名の表示改善
@@ -2262,8 +2308,7 @@ def main():
     
     # v024 Phase 1: LIF層初期化（単純なSNNラッパー）
     snn = None
-    # 全層LIF化により常に有効
-    if True:
+    if hp.enable_lif:
         print("\n🧠 LIF層初期化中...")
         from modules.snn.lif_neuron import LIFNeuronLayer
         

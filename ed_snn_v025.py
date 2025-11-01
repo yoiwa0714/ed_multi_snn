@@ -1,169 +1,203 @@
 #!/usr/bin/env python3
 """
-ED-SNN 公開版 - スパイキングニューラルネットワークのための純粋ED法実装
+ED-SNN v025 - 全LIF化完成版 + Fashion-MNIST多層構造検証完了（2025-10-18）
 
-金子勇氏オリジナルED法完全準拠 + 全層LIF化 + MNIST/Fashion-MNIST対応
+金子勇氏オリジナルED法完全準拠 + 全層LIF化 + スパイク符号化最適化 + E/Iペア最適化
 
-【概要】:
+【v025の主要成果（2025-10-18更新）】:
 
-本実装は、金子勇氏（1999）によるError-Diffusion（ED）法をスパイキング
-ニューラルネットワーク（SNN）に適用したものです。誤差逆伝播法を使用せず、
-生物学的に妥当な学習アルゴリズムでMNISTとFashion-MNISTの画像分類を実現します。
-
-【主要な特徴】:
-
-✅ **純粋ED法**: 誤差逆伝播法・連鎖律を使用しない生物学的学習
-✅ **全層LIF化**: 1706個の全ニューロンがLeaky Integrate-and-Fire（LIF）モデル
-✅ **スパイク符号化**: ポアソン符号化による入力層のスパイク生成（150Hz, 50ms）
-✅ **E/Iペア構造**: 興奮性・抑制性ニューロンペアによる生物学的妥当性
-✅ **Dale's Principle**: ニューロンの重み符号保持（興奮性≥0、抑制性≤0）
-✅ **独立出力ニューロン**: クラスごとに独立した出力ニューロン
-✅ **アミン拡散学習**: 生物学的な誤差信号伝播メカニズム
-
-【達成精度】:
-
-【達成精度】:
-
-- **MNIST**: テスト正答率85.0%（訓練正答率85.9%、1000サンプル×10エポック）
-- **Fashion-MNIST**: テスト正答率82.0%（単層128構成）
-- 汎化ギャップ: 0.9%（過学習なし、極めて良好）
-
-【ネットワーク構成】:
-
-```
-入力層:  1568ニューロン (784ピクセル × 2 [E/I])
-  ├─ E/Iペア構造
-  ├─ スパイク符号化: ポアソン（150Hz）
-  └─ シミュレーション時間: 50ms
-
-隠れ層: 128ニューロン (単層、デフォルト)
-  ├─ LIF活性化関数
-  ├─ E/Iペア構造保持
-  └─ Dale's Principle適用
-
-出力層: 10ニューロン (独立出力)
-  ├─ LIF活性化関数
-  ├─ 各クラスに1ニューロン
-  └─ アミン拡散学習
-```
-
-【基本的な使い方】:
-
-```bash
-# MNIST学習（デフォルト設定）
-python ed_snn_mnist_published.py --mnist --train 1000 --test 100 --epochs 10
-
-# Fashion-MNIST学習
-python ed_snn_mnist_published.py --fashion --train 1000 --test 100 --epochs 10
-
-# リアルタイム可視化付き
-python ed_snn_mnist_published.py --mnist --train 1000 --test 100 --epochs 10 --viz --heatmap
-
-# スパイク符号化パラメータのカスタマイズ
-python ed_snn_mnist_published.py --mnist --train 1000 --test 100 --epochs 10 \
-  --use_input_lif --spike_encoding poisson \
-  --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0
-```
-
-【主要なコマンドライン引数】:
-
-**データセット**:
-- `--mnist`: MNISTデータセット使用
-- `--fashion`: Fashion-MNISTデータセット使用
-
-**学習設定**:
-- `--train N`: 訓練サンプル数（デフォルト: 512）
-- `--test N`: テストサンプル数（デフォルト: 512）
-- `--epochs N`: エポック数（デフォルト: 10）
-- `--hidden N1,N2,...`: 隠れ層構造（デフォルト: 128）
-- `--batch N`: ミニバッチサイズ（デフォルト: 128）
-
-**ED法パラメータ**:
-- `--lr FLOAT`: 学習率（デフォルト: 0.1）
-- `--ami FLOAT`: 初期アミン濃度（デフォルト: 0.25）
-- `--dif FLOAT`: アミン拡散係数（デフォルト: 0.5）
-- `--sig FLOAT`: シグモイド閾値（デフォルト: 1.2）
-
-**LIFニューロンパラメータ**:
-- `--v_rest FLOAT`: 静止膜電位（デフォルト: -65.0 mV）
-- `--v_threshold FLOAT`: 発火閾値（デフォルト: -60.0 mV）
-- `--v_reset FLOAT`: リセット電位（デフォルト: -70.0 mV）
-- `--tau_m FLOAT`: 膜時定数（デフォルト: 20.0 ms）
-- `--tau_ref FLOAT`: 不応期（デフォルト: 2.0 ms）
-
-**スパイク符号化パラメータ**:
-- `--use_input_lif`: 入力層のLIF化を有効化
-- `--spike_encoding TYPE`: 符号化方式（poisson/rate/temporal、デフォルト: poisson）
-- `--spike_max_rate FLOAT`: 最大発火率（デフォルト: 150.0 Hz）
-- `--spike_sim_time FLOAT`: シミュレーション時間（デフォルト: 50.0 ms）
-- `--spike_dt FLOAT`: 時間ステップ（デフォルト: 1.0 ms）
-
-**可視化**:
-- `--viz`: リアルタイム学習進捗表示
-- `--heatmap`: スパイク活動ヒートマップ表示
-- `--save_fig DIR`: 図表保存ディレクトリ指定
-
-**その他**:
-- `--cpu`: CPU強制実行（GPU環境でも）
-- `--no_shuffle`: データシャッフル無効化
-
-【ed_multi_snn.prompt.md完全準拠】:
-
-本実装は以下の7つの拡張機能を完全実装しています：
+✅ Fashion-MNIST多層構造検証完了（2025-10-18）
    
-1. **E/Iペア構造**: 各ピクセル→興奮性+抑制性ニューロン
-2. **Dale's Principle**: 興奮性重み≥0、抑制性重み≤0の保持
-3. **独立出力ニューロン**: クラスごとに独立した出力ニューロン
-4. **アミン拡散学習**: 純粋ED法（誤差逆伝播なし）
-5. **スパイク符号化**: ポアソン符号化（最適パラメータ: 150Hz, 50ms）
-6. **LIFニューロン**: 全1706ニューロンがLIF化
-7. **GPU計算支援**: CPU/GPU透明な切り替え
-
-【技術的詳細】:
+   **重要な発見**:
+   - 単層128: テスト正答率82.0%（最高記録）
+   - 2層256→128: テスト正答率80.0%（u1=0.5）
+   - 3層256→192→128: テスト正答率76.0%（u1=0.6）
+   - alpha=0.15で+6-8%の精度向上確認
    
-【技術的詳細】:
+   **課題発見**:
+   - 多層構造で深い層（隠れ層2-3）が不活発
+   - ヒートマップ分析: 赤紫モザイク状態（学習不足）
+   - アミン拡散の減衰問題（u1=0.5で各層50%減衰）
+   
+   **次期v026の方針**:
+   - リアルタイム活性度モニタリング実装
+   - u1パラメータ探索（0.7, 0.9, 1.2）
+   - 層別活性度の定量評価（閾値0.3）
 
-**LIF活性化関数**:
-- 連続値入力→発火率[0,1]出力
-- 時間的統合、発火、リセットのダイナミクス
-- 膜時定数tau_m、発火閾値v_threshold、リセット電位v_reset
+【v025の主要成果（2025-10-17）】:
 
-**スパイク符号化**:
-- ポアソン符号化: 生物学的妥当性が最も高い
-- レート符号化: 決定論的、デバッグ用
-- テンポラル符号化: 時間情報の利用
+✅ Step 5完了: ED法大規模学習検証（2025-10-17）
+   
+   **目標達成**:
+   - 学習精度: 85.9%（1000サンプル×10エポック）
+   - テスト正答率: 85.0%
+   - 目標精度: 85%超過達成 ✅
+   - 実行時間: 21分32秒（1292秒、129秒/エポック）
+   - 汎化ギャップ: 0.9%（極めて良好、過学習なし）
+   
+   **検証成果**:
+   - 長期学習の安定性確認（10エポックで収束）
+   - Step 4最適化の有効性実証
+   - ed_multi_snn.prompt.md完全準拠（100%）
+   - 純粋ED法で高精度達成（誤差逆伝播なし）
+   
+   **実行条件**:
+   ```bash
+   python ed_snn_v025.py --mnist --train 1000 --test 100 \
+     --use_input_lif --spike_encoding poisson \
+     --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 \
+     --viz --heatmap --save_fig viz_results/spike_mnist_tr1000_e10 \
+     --epochs 10
+   ```
+   
+   **詳細レポート**: docs/STEP5_LARGE_SCALE_LEARNING_REPORT.md
 
-**ED法アルゴリズム**:
-- 純粋ED法: 誤差逆伝播法・連鎖律を使用しない
-- アミン拡散: 生物学的な誤差信号伝播
-- Dale's Principle: ニューロンタイプによる重み符号制約
+🎯 Step 1-4完了: 全LIF化とスパイク符号化最適化（2025-10-10～10-16）
+   
+   **Step 1: LIF活性化関数実装**
+   - シグモイドの代替LIF活性化関数を実装
+   - 連続値入力→発火率[0,1]出力
+   - 時間的統合、発火、リセットのダイナミクス実装
+   
+   **Step 2a: 隠れ層LIF化**
+   - forward_passに分岐追加（enable_lif=True、use_input_lif=False）
+   - 精度: 53%達成（>15%目標クリア）
+   
+   **Step 2b: 出力層LIF化**
+   - 出力層でもLIF活性化関数使用（全層LIF化、入力層除く）
+   - 精度: 53%維持（>20%目標クリア）
+   
+   **Step 3: 全LIF化検証**
+   - 入力層スパイク符号化（ポアソン符号化）
+   - 全1706ニューロンがLIF（入力1568 + 隠れ128 + 出力10）
+   - 精度: 76%達成（>40%目標を大幅超過）
+   - ed_multi_snn.prompt.md準拠: 100%
+   
+   **Step 4-1: スパイク符号化方式比較**
+   - ポアソン/レート/テンポラル符号化を定量比較
+   - ポアソン符号化を推奨方式として決定
+   - 精度: 74%、実行時間: 73秒、生物学的妥当性: 5/5
+   
+   **Step 4-2: スパイク符号化パラメータ最適化**
+   - spike_max_rate=150Hzで精度80%達成（+6%向上）
+   - 実行時間: 66秒（-9.3%）
+   - 汎化性能向上（テスト>訓練）
+   - 推奨パラメータ: 150Hz, 50ms, 1.0ms
+   
+   **Step 4-3: GPU最適化・ベクトル化**
+   - スパイク符号化のベクトル化実装（50回ループ削除）
+   - 重要発見: 小規模データではCPU版が1.7倍高速
+   - CPU版をデフォルト推奨（GPU転送オーバーヘッド回避）
+   
+   **Step 4-4: E/Iペア化処理最適化**
+   - repeat() → stack()への変更で1.27倍高速化
+   - 小規模（100×3）: 74%、36秒
+   - 大規模（500×5）: 89%、194秒
+   - E/Iペア構造の正確性検証、Dale's Principle準拠確認
+   
+   **詳細レポート**:
+   - docs/STEP3_VERIFICATION_REPORT.md
+   - docs/STEP4_1_ENCODING_COMPARISON_REPORT.md
+   - docs/STEP4_2_PARAM_OPTIMIZATION_REPORT.md
+   - docs/STEP4_3_GPU_OPTIMIZATION_REPORT.md
+   - docs/STEP4_4_EI_PAIRING_OPTIMIZATION_REPORT.md
 
-**パフォーマンス**:
-- GPU/CPU自動切り替え（CuPy/NumPy）
-- 小規模データではCPU版を推奨（GPU転送オーバーヘッド回避）
-- ベクトル化実装による高速化
-- MNIST 1000サンプル×10エポック: 約21分（CPU版）
+🧬 ed_multi_snn.prompt.md完全準拠（100%達成）
+   
+   **拡張機能1: E/Iペア構造**
+   - ✅ 各ピクセル→興奮性+抑制性ニューロン
+   - ✅ 偶数インデックス: 興奮性（E）
+   - ✅ 奇数インデックス: 抑制性（I）
+   - ✅ stack()による高速ペア化（Step 4-4最適化）
+   
+   **拡張機能2: Dale's Principle**
+   - ✅ 興奮性重み: w >= 0（常に正）
+   - ✅ 抑制性重み: w <= 0（常に負）
+   - ✅ 学習中も符号保持
+   
+   **拡張機能3: 独立出力ニューロン**
+   - ✅ 10クラス → 10独立ニューロン
+   - ✅ 各ニューロンが1クラスを担当
+   - ✅ クラス間干渉なし
+   
+   **拡張機能4: アミン拡散学習**
+   - ✅ 純粋ED法実装（誤差逆伝播なし）
+   - ✅ アミン濃度による重み更新
+   - ✅ 生物学的妥当性維持
+   
+   **拡張機能5: スパイク符号化**
+   - ✅ ポアソン符号化（Step 4-1選定）
+   - ✅ 最適パラメータ: 150Hz, 50ms, 1.0ms（Step 4-2）
+   - ✅ ベクトル化実装（Step 4-3）
+   
+   **拡張機能6: LIFニューロン**
+   - ✅ 全層100%LIF化（1706ニューロン）
+   - ✅ 入力層: 1568 LIF（784×2 E/I）
+   - ✅ 隠れ層: 128 LIF
+   - ✅ 出力層: 10 LIF
+   - ✅ 生物学的パラメータ設定
+   
+   **拡張機能7: GPU計算支援**
+   - ✅ CPU版推奨（小規模データで高速）
+   - ✅ GPU/CPU透明な切り替え
+   - ✅ ベクトル化による高速化
 
-【開発履歴】:
+📊 精度進捗まとめ
+   
+   | ステップ | 条件 | 精度 | 改善 | 主要成果 |
+   |---------|------|------|------|---------|
+   | Step 2 | 基本LIF | 53% | ベースライン | 部分LIF化 |
+   | Step 3 | 全LIF | 76% | +23% | 100%LIF化 |
+   | Step 4-1 | ポアソン | 74% | 符号化導入 | 方式選定 |
+   | Step 4-2 | 150Hz | 80% | +6% | パラメータ最適化 |
+   | Step 4-3 | ベクトル化 | 85% | +5% | 高速化 |
+   | Step 4-4 | stack() | 89% | +4% | E/Iペア最適化 |
+   | **Step 5** | **1000×10** | **85.9%** | **+9.9% (Step 3比)** | **目標達成** |
+   
+   **総合向上**: +32.9%（53% → 85.9%）
+   **最適化累積効果**: Step 4で+15%向上
 
-本実装は以下の段階的な開発を経て完成しました：
-- v019: 金子勇氏オリジナルED法完全準拠達成（精度76.4%）
-- v020: リアルタイム可視化システム完成
-- v021-v023: GPU最適化、過学習問題修正
-- v024: GPU/CPU強制実行オプション対応
-- v025: 全LIF化完成、スパイク符号化最適化、目標精度達成（85.0%）
+🚀 次のステップ: Step 6
+   
+   **目標**: 精度>80%達成（既に85.9%で達成済み！）
+   
+   **推奨タスク**:
+   1. 詳細分析: 学習ダイナミクス、誤分類パターン
+   2. ハイパーパラメータ探索（オプション）
+   3. 多層構造拡張（オプション、期待精度88-90%）
+   4. 最終統合レポート作成
 
-【参考文献】:
+【v023の主要成果（継承）】:
 
-- 金子勇 (1999): Error-Diffusion法の原論文
-- ed_multi_snn.prompt.md: 本実装の設計指針
-- LIF neuron model: Leaky Integrate-and-Fire ニューロンモデル
-
-【ライセンス】:
-
-Original ED method by Isamu Kaneko (1999)
-Multi-layer & ED Core Parameters & SNN extension (2025)
-Public Release Version (2025-10-24)
+🚀 GPU最適化実装（2025-10-11 午前）: CuPy統合による劇的な高速化✅
+   
+   **達成成果**:
+   - 高速化率: 5.47倍（105.92秒 → 19.37秒、100サンプル×1エポック）
+   - 1000サンプル×3エポック: 205.64秒（3.43分）
+   - 推奨設定（1000サンプル×10エポック）推定: 約32分（従来約3時間）
+   - 精度維持: NumPy版と同等（14.00%）
+   - ed_multi_snn.prompt.md準拠: 拡張機能7（GPU計算支援）完全実装
+   
+   **最適化手法**:
+   1. 重み行列のGPU常駐化
+      - 初期化時に1回だけGPU転送
+      - 以降はGPU上で保持、転送オーバーヘッドを完全排除
+   
+   2. 行列積演算のGPU化
+      - 最大のボトルネック（49.6%）をGPU並列計算で高速化
+      - `layer_weight @ current_layer_output`をGPU上で実行
+   
+   3. シグモイド関数のGPU対応
+      - `self.xp.clip()`, `self.xp.exp()`による透明なGPU対応
+   
+   4. 重み更新のGPU最適化
+      - GPU上で全計算を完結、転送回数を最小化
+   
+   5. Dale's Principleのベクトル化
+      - 二重ループをベクトル化マスク演算に置き換え
+      - GPU並列処理を最大活用
+   
+   6. 透明なフォールバック処理
       - GPU未検出時に自動的にNumPyに切り替え
       - `try-except`による堅牢なエラーハンドリング
 
@@ -454,6 +488,9 @@ class HyperParams:
         self.force_cpu = False        # CPU強制実行 [SNN未実装]
         self.fashion_mnist = True     # Fashion-MNIST使用 - シミュレーション最適化
         self.mnist = False            # MNIST使用
+        self.cifar10 = False          # CIFAR-10使用（Phase 1実装）
+        self.cifar100 = False         # CIFAR-100使用（v024 Phase 1実装）
+        self.cifar100_coarse = False  # CIFAR-100 Coarse Labels（20 Superclass）使用（v024 Phase 1実装）
         self.save_fig = None          # 図表保存ディレクトリ（タイムスタンプ付き保存）
         self.no_shuffle = False       # データシャッフル無効化（ed_snn独自）
         self.verify_acc_loss = False  # 精度・誤差検証レポート表示
@@ -466,8 +503,19 @@ class HyperParams:
     
     def __post_init__(self):
         """データセット名と出力サイズの自動設定"""
-        # データセット選択の優先順位: Fashion-MNIST > MNIST
-        if self.fashion_mnist:
+        # データセット選択の優先順位: CIFAR-100 > CIFAR-10 > Fashion-MNIST > MNIST
+        if self.cifar100:
+            # CIFAR-100: Coarse Labels（20 Superclass）またはFine Labels（100クラス）
+            if self.cifar100_coarse:
+                self.dataset_name = 'cifar100_coarse'
+                self.output_size = 20   # CIFAR-100 Superclass: 20クラス
+            else:
+                self.dataset_name = 'cifar100'
+                self.output_size = 100  # CIFAR-100 Fine Labels: 100クラス
+        elif self.cifar10:
+            self.dataset_name = 'cifar10'
+            self.output_size = 10   # CIFAR-10: 10クラス
+        elif self.fashion_mnist:
             self.dataset_name = 'fashion_mnist'
             self.output_size = 10   # Fashion-MNIST: 10クラス
         elif self.mnist:
@@ -479,11 +527,11 @@ class HyperParams:
             self.output_size = 10
     
     def parse_args(self, args=None):
-        """コマンドライン引数解析（README.md完全準拠）"""
+        """コマンドライン引数解析（ed_v032_simple.py準拠）"""
         import argparse
         
         parser = argparse.ArgumentParser(
-            description='ED-Multi SNN - スパイキングニューラルネットワークのための純粋ED法実装',
+            description='ED-SNN v015 HyperParams統一版 - ed_v032_simple準拠',
             formatter_class=argparse.RawDescriptionHelpFormatter,
             epilog="""
 ED法ハイパーパラメータ説明:
@@ -493,157 +541,142 @@ ED法ハイパーパラメータ説明:
   シグモイド閾値(u0): 活性化関数の感度
   重み初期値1(w1): 興奮性ニューロンの初期重み
   重み初期値2(w2): 抑制性ニューロンの初期重み
+  
+[SNN未実装]マークのパラメータ:
+  将来の実装のためのダミーパラメータです。
+  現在は指定しても効果はありませんが、ed_v032_simpleとの
+  コマンドライン互換性を保つために用意されています。
 
 Original Algorithm: 金子勇 (1999)
 Implementation: ed_multi_snn.prompt.md準拠
-Repository: https://github.com/yoiwa0714/ed_multi_snn
             """
         )
         
-        # === データセット ===
-        dataset_group = parser.add_argument_group('データセット')
-        dataset_group.add_argument('--mnist', action='store_true',
-                                   help='MNISTデータセット使用（デフォルト）')
-        dataset_group.add_argument('--fashion', action='store_true', default=self.fashion_mnist,
-                                   help='Fashion-MNISTデータセット使用')
+        # === ED法アルゴリズムパラメータ ===
+        ed_group = parser.add_argument_group('ED法アルゴリズムパラメータ')
+        ed_group.add_argument('--learning_rate', '--lr', type=float, default=self.learning_rate,
+                             help=f'学習率 alpha (デフォルト: {self.learning_rate})')
+        ed_group.add_argument('--amine', '--ami', type=float, default=self.initial_amine,
+                             help=f'初期アミン濃度 beta (デフォルト: {self.initial_amine}) [多層学習で重要]')
+        ed_group.add_argument('--diffusion', '--dif', type=float, default=self.diffusion_rate,
+                             help=f'アミン拡散係数 u1 (デフォルト: {self.diffusion_rate}) [多層学習で重要]')
+        ed_group.add_argument('--sigmoid', '--sig', type=float, default=self.sigmoid_threshold,
+                             help=f'シグモイド閾値 u0 (デフォルト: {self.sigmoid_threshold}) [多層学習で重要]')
+        ed_group.add_argument('--weight1', '--w1', type=float, default=self.initial_weight_1,
+                             help=f'重み初期値1 (デフォルト: {self.initial_weight_1}) [興奮性ニューロン]')
+        ed_group.add_argument('--weight2', '--w2', type=float, default=self.initial_weight_2,
+                             help=f'重み初期値2 (デフォルト: {self.initial_weight_2}) [抑制性ニューロン]')
         
-        # === 学習設定 ===
-        train_group = parser.add_argument_group('学習設定')
-        train_group.add_argument('--train', type=int, default=self.train_samples,
-                                metavar='N',
-                                help=f'訓練サンプル数（デフォルト: {self.train_samples}）')
-        train_group.add_argument('--test', type=int, default=self.test_samples,
-                                metavar='N',
-                                help=f'テストサンプル数（デフォルト: {self.test_samples}）')
-        train_group.add_argument('--epochs', type=int, default=self.epochs,
-                                metavar='N',
-                                help=f'エポック数（デフォルト: {self.epochs}）')
-        train_group.add_argument('--hidden', type=str, default=','.join(map(str, self.hidden_layers)),
-                                metavar='N1,N2,...',
-                                help=f'隠れ層構造（デフォルト: {",".join(map(str, self.hidden_layers))}）')
-        train_group.add_argument('--batch', type=int, default=self.batch_size,
-                                metavar='N',
-                                help=f'ミニバッチサイズ（デフォルト: {self.batch_size}）')
-        train_group.add_argument('--seed', type=int, default=self.random_seed,
-                                metavar='N',
-                                help='ランダムシード（デフォルト: ランダム）')
-        train_group.add_argument('--no_shuffle', action='store_true',
-                                help='データシャッフル無効化')
-        
-        # === ED法ハイパーパラメータ ===
-        ed_group = parser.add_argument_group('ED法ハイパーパラメータ')
-        ed_group.add_argument('--lr', type=float, default=self.learning_rate,
-                             metavar='FLOAT',
-                             help=f'学習率 (alpha) - ニューロンの学習強度を制御（デフォルト: {self.learning_rate}）')
-        ed_group.add_argument('--ami', type=float, default=self.initial_amine,
-                             metavar='FLOAT',
-                             help=f'アミン濃度 (beta) - 初期誤差信号の強度（デフォルト: {self.initial_amine}）')
-        ed_group.add_argument('--dif', type=float, default=self.diffusion_rate,
-                             metavar='FLOAT',
-                             help=f'拡散係数 (u1) - アミン（誤差信号）の拡散率（デフォルト: {self.diffusion_rate}）')
-        ed_group.add_argument('--sig', type=float, default=self.sigmoid_threshold,
-                             metavar='FLOAT',
-                             help=f'シグモイド閾値 (u0) - 活性化関数の感度（デフォルト: {self.sigmoid_threshold}）')
-        ed_group.add_argument('--w1', type=float, default=self.initial_weight_1,
-                             metavar='FLOAT',
-                             help=f'重み初期値1 - 興奮性ニューロンの初期重み（デフォルト: {self.initial_weight_1}）')
-        ed_group.add_argument('--w2', type=float, default=self.initial_weight_2,
-                             metavar='FLOAT',
-                             help=f'重み初期値2 - 抑制性ニューロンの初期重み（デフォルト: {self.initial_weight_2}）')
-        
-        # === LIFニューロンパラメータ ===
-        lif_group = parser.add_argument_group('LIFニューロンパラメータ')
+        # === LIFニューロンパラメータ（v570準拠、新規追加） ===
+        lif_group = parser.add_argument_group('LIFニューロンパラメータ（v019新規追加）')
         lif_group.add_argument('--v_rest', type=float, default=self.v_rest,
-                              metavar='FLOAT',
-                              help=f'静止膜電位（デフォルト: {self.v_rest} mV）')
+                              help=f'静止膜電位 (デフォルト: {self.v_rest} mV)')
         lif_group.add_argument('--v_threshold', '--v_thresh', type=float, default=self.v_threshold,
-                              metavar='FLOAT',
-                              help=f'発火閾値（デフォルト: {self.v_threshold} mV）')
+                              help=f'発火閾値 (デフォルト: {self.v_threshold} mV)')
         lif_group.add_argument('--v_reset', type=float, default=self.v_reset,
-                              metavar='FLOAT',
-                              help=f'リセット電位（デフォルト: {self.v_reset} mV）')
+                              help=f'リセット電位 (デフォルト: {self.v_reset} mV)')
         lif_group.add_argument('--tau_m', '--tau_mem', type=float, default=self.tau_m,
-                              metavar='FLOAT',
-                              help=f'膜時定数（デフォルト: {self.tau_m} ms）')
+                              help=f'膜時定数 (デフォルト: {self.tau_m} ms)')
         lif_group.add_argument('--tau_ref', '--tau_refractory', type=float, default=self.tau_ref,
-                              metavar='FLOAT',
-                              help=f'不応期（デフォルト: {self.tau_ref} ms）')
-        lif_group.add_argument('--simulation_time', '--sim_time', type=float, default=self.simulation_time,
-                              metavar='FLOAT',
-                              help=f'シミュレーション時間（デフォルト: {self.simulation_time} ms）')
+                              help=f'不応期 (デフォルト: {self.tau_ref} ms)')
         lif_group.add_argument('--dt', type=float, default=self.dt,
-                              metavar='FLOAT',
-                              help=f'時間ステップ（デフォルト: {self.dt} ms）')
+                              help=f'時間ステップ (デフォルト: {self.dt} ms)')
         lif_group.add_argument('--R_m', '--membrane_resistance', type=float, default=self.R_m,
-                              metavar='FLOAT',
-                              help=f'膜抵抗（デフォルト: {self.R_m} MΩ）')
+                              help=f'膜抵抗 (デフォルト: {self.R_m} MΩ)')
+        lif_group.add_argument('--sim_time', '--simulation_time', type=float, default=self.simulation_time,
+                              help=f'シミュレーション時間 (デフォルト: {self.simulation_time} ms)')
+        
+        # === Step 3a: 入力層LIF統合パラメータ（v025新規追加） ===
         lif_group.add_argument('--spike_encoding', '--encoding', type=str, 
                               default=self.spike_encoding_method,
                               choices=['poisson', 'rate', 'temporal'],
-                              metavar='METHOD',
-                              help=f'スパイク符号化方法（デフォルト: {self.spike_encoding_method}）')
+                              help=f'スパイク符号化方法 (デフォルト: {self.spike_encoding_method})')
         lif_group.add_argument('--spike_max_rate', '--max_rate', type=float, 
                               default=self.spike_max_rate,
-                              metavar='FLOAT',
-                              help=f'最大発火率 Hz（デフォルト: {self.spike_max_rate}）')
+                              help=f'最大発火率 Hz (デフォルト: {self.spike_max_rate})')
         lif_group.add_argument('--spike_sim_time', type=float, 
                               default=self.spike_simulation_time,
-                              metavar='FLOAT',
-                              help=f'スパイクシミュレーション時間 ms（デフォルト: {self.spike_simulation_time}）')
+                              help=f'スパイクシミュレーション時間 ms (デフォルト: {self.spike_simulation_time})')
         lif_group.add_argument('--spike_dt', type=float, 
                               default=self.spike_dt,
-                              metavar='FLOAT',
-                              help=f'スパイク時間刻み ms（デフォルト: {self.spike_dt}）')
+                              help=f'スパイク時間刻み ms (デフォルト: {self.spike_dt})')
         
-        # === 可視化 ===
-        viz_group = parser.add_argument_group('可視化')
-        viz_group.add_argument('--viz', action='store_true', default=self.enable_visualization,
-                              help='リアルタイム学習進捗表示')
-        viz_group.add_argument('--heatmap', action='store_true', default=False,
-                              help='スパイク活動ヒートマップ表示')
-        viz_group.add_argument('--save_fig', nargs='?', const='images', default=None,
-                              metavar='DIR',
-                              help='図表保存ディレクトリ指定')
+        # === 実行時設定パラメータ ===
+        exec_group = parser.add_argument_group('実行時設定パラメータ')
+        exec_group.add_argument('--train_samples', '--train', type=int, default=self.train_samples,
+                               help=f'訓練データ数 (デフォルト: {self.train_samples})')
+        exec_group.add_argument('--test_samples', '--test', type=int, default=self.test_samples,
+                               help=f'テストデータ数 (デフォルト: {self.test_samples})')
+        exec_group.add_argument('--epochs', '--epo', type=int, default=self.epochs,
+                               help=f'エポック数 (デフォルト: {self.epochs})')
+        exec_group.add_argument('--hidden', '--hid', type=str, default=','.join(map(str, self.hidden_layers)),
+                               help=f'隠れ層構造 (デフォルト: {",".join(map(str, self.hidden_layers))}) - カンマ区切り指定 (例: 256,128,64)')
+        exec_group.add_argument('--batch_size', '--batch', type=int, default=self.batch_size,
+                               help=f'ミニバッチサイズ (デフォルト: {self.batch_size})')
+        exec_group.add_argument('--seed', type=int, default=self.random_seed,
+                               help='ランダムシード (デフォルト: ランダム)')
+        exec_group.add_argument('--viz', action='store_true', default=self.enable_visualization,
+                               help='リアルタイム可視化を有効化 (デフォルト: 無効)')
+        exec_group.add_argument('--heatmap', action='store_true', default=False,
+                               help='リアルタイムヒートマップ可視化を有効化 (デフォルト: 無効)')
+        exec_group.add_argument('--verbose', '--v', action='store_true', default=self.verbose,
+                               help='詳細表示を有効化 (デフォルト: 無効)')
+        exec_group.add_argument('--cpu', action='store_true', default=self.force_cpu,
+                               help='CPU強制実行モード: GPU環境でもCPU（NumPy）で実行。'
+                                    'デバッグ、性能比較、GPU未搭載環境での動作確認に使用。'
+                                    'ed_multi_snn.prompt.md拡張機能7準拠 (デフォルト: GPU自動検出)')
+        exec_group.add_argument('--fashion', action='store_true', default=self.fashion_mnist,
+                               help='Fashion-MNISTデータセット使用 (デフォルト: 有効)')
+        exec_group.add_argument('--mnist', action='store_true',
+                               help='通常MNISTデータセット使用 (--fashionの反対)')
+        exec_group.add_argument('--cifar10', action='store_true',
+                               help='CIFAR-10データセット使用（32×32カラー、10クラス）')
+        exec_group.add_argument('--cifar100', action='store_true',
+                               help='CIFAR-100データセット使用（32×32カラー、100クラス Fine Labels）')
+        exec_group.add_argument('--cifar100_coarse', action='store_true',
+                               help='CIFAR-100 Coarse Labels（20 Superclass）使用。'
+                                    '--cifar100と併用。デフォルトはFine Labels（100クラス）。'
+                                    'ed_multi_snn.prompt.md拡張機能6準拠')
+        exec_group.add_argument('--save_fig', nargs='?', const='images', default=None,
+                               help='図表保存を有効化 (引数なし: ./images, 引数あり: 指定ディレクトリ) ファイル名: realtime_viz_result_YYYYMMDD_HHMMSS.png')
+        exec_group.add_argument('--verify_acc_loss', action='store_true', default=False,
+                               help='精度・誤差の検証レポートを表示 (デフォルト: 無効)')
+        exec_group.add_argument('--no_shuffle', action='store_true',
+                               help='データシャッフルを無効化 (デフォルト: 有効)')
         
-        # === その他 ===
-        other_group = parser.add_argument_group('その他')
-        other_group.add_argument('--cpu', action='store_true', default=self.force_cpu,
-                                help='CPU強制実行（GPU環境でも）')
-        other_group.add_argument('--verbose', '--v', action='store_true', default=self.verbose,
-                                help='詳細ログ表示')
-        other_group.add_argument('--verify_acc_loss', action='store_true', default=False,
-                                help='精度・誤差の検証レポートを表示')
+        # === 重み管理オプション [SNN未実装] ===
+        weight_group = parser.add_argument_group('重み管理オプション [SNN未実装]')
         
         # 引数解析
         parsed_args = parser.parse_args(args)
         
         # パラメータ値の更新
-        self.learning_rate = parsed_args.lr
-        self.initial_amine = parsed_args.ami
-        self.diffusion_rate = parsed_args.dif
-        self.sigmoid_threshold = parsed_args.sig
-        self.initial_weight_1 = parsed_args.w1
-        self.initial_weight_2 = parsed_args.w2
+        self.learning_rate = parsed_args.learning_rate
+        self.initial_amine = parsed_args.amine
+        self.diffusion_rate = parsed_args.diffusion
+        self.sigmoid_threshold = parsed_args.sigmoid
+        self.initial_weight_1 = parsed_args.weight1
+        self.initial_weight_2 = parsed_args.weight2
         
-        # LIFニューロンパラメータ
+        # LIFニューロンパラメータ（v019新規追加）
         self.v_rest = parsed_args.v_rest
         self.v_threshold = parsed_args.v_threshold
         self.v_reset = parsed_args.v_reset
         self.tau_m = parsed_args.tau_m
         self.tau_ref = parsed_args.tau_ref
         self.dt = parsed_args.dt
-        self.simulation_time = parsed_args.simulation_time
         self.R_m = parsed_args.R_m
+        self.simulation_time = parsed_args.sim_time
         
-        # スパイク符号化パラメータ
+        # Step 3a: 入力層LIF統合パラメータ（v025新規追加）
         self.spike_encoding_method = parsed_args.spike_encoding
         self.spike_max_rate = parsed_args.spike_max_rate
         self.spike_simulation_time = parsed_args.spike_sim_time
         self.spike_dt = parsed_args.spike_dt
         
-        # 学習設定パラメータ
-        self.train_samples = parsed_args.train
-        self.test_samples = parsed_args.test
+        # 実行時設定パラメータ
+        self.train_samples = parsed_args.train_samples
+        self.test_samples = parsed_args.test_samples
         self.epochs = parsed_args.epochs
         
         # 隠れ層構造の解析
@@ -659,21 +692,53 @@ Repository: https://github.com/yoiwa0714/ed_multi_snn
         else:
             self.hidden_layers = [parsed_args.hidden]
         
-        self.batch_size = parsed_args.batch
+        self.batch_size = parsed_args.batch_size
         self.random_seed = parsed_args.seed
         self.enable_visualization = parsed_args.viz
         self.enable_heatmap = parsed_args.heatmap
         self.verbose = parsed_args.verbose
         self.force_cpu = parsed_args.cpu
-        self.verify_acc_loss = parsed_args.verify_acc_loss
+        self.verify_acc_loss = parsed_args.verify_acc_loss  # 検証レポート表示
         
-        # データセット選択フラグ処理（優先順位: MNIST > Fashion-MNIST）
-        if hasattr(parsed_args, 'mnist') and parsed_args.mnist:
+        # データセット選択フラグ処理（優先順位: CIFAR-100 > CIFAR-10 > MNIST > Fashion-MNIST）
+        if hasattr(parsed_args, 'cifar100') and parsed_args.cifar100:
+            self.cifar100 = True
+            self.cifar10 = False
+            self.mnist = False
+            self.fashion_mnist = False
+            # CIFAR-100 Coarse Labels設定
+            if hasattr(parsed_args, 'cifar100_coarse') and parsed_args.cifar100_coarse:
+                self.cifar100_coarse = True
+            else:
+                self.cifar100_coarse = False
+        elif hasattr(parsed_args, 'cifar10') and parsed_args.cifar10:
+            self.cifar100 = False
+            self.cifar10 = True
+            self.mnist = False
+            self.fashion_mnist = False
+            self.cifar100_coarse = False  # CIFAR-10使用時はCoarseラベルなし
+        elif hasattr(parsed_args, 'mnist') and parsed_args.mnist:
+            self.cifar100 = False
+            self.cifar10 = False
             self.mnist = True
             self.fashion_mnist = False
+            self.cifar100_coarse = False  # MNIST使用時はCoarseラベルなし
         else:
+            self.cifar100 = False
+            self.cifar10 = False
             self.mnist = False
             self.fashion_mnist = parsed_args.fashion
+            self.cifar100_coarse = False  # Fashion-MNIST使用時はCoarseラベルなし
+        
+        # --cifar100_coarse単独使用時の警告とエラーハンドリング
+        if hasattr(parsed_args, 'cifar100_coarse') and parsed_args.cifar100_coarse and not self.cifar100:
+            print("⚠️  警告: --cifar100_coarseは--cifar100と併用してください")
+            print("   --cifar100を自動的に有効化します")
+            self.cifar100 = True
+            self.cifar100_coarse = True
+            self.cifar10 = False
+            self.mnist = False
+            self.fashion_mnist = False
         
         # データセット名と出力サイズの設定
         self.__post_init__()
@@ -681,9 +746,9 @@ Repository: https://github.com/yoiwa0714/ed_multi_snn
         self.save_fig = getattr(parsed_args, 'save_fig', None)
         self.no_shuffle = parsed_args.no_shuffle
         
+        # 重み管理オプション
+        
         return parsed_args
-
-
 
 
 # matplotlib バックエンド設定（ed_v032_simple.py準拠）
@@ -2113,17 +2178,35 @@ def load_dataset(dataset_name, train_samples=None, test_samples=None):
     - これにより、少数サンプル指定時もエポックごとに異なるデータで学習
     
     Args:
-        dataset_name: 'mnist', 'fashion_mnist'
+        dataset_name: 'mnist', 'fashion_mnist', 'cifar10', 'cifar100', 'cifar100_coarse'
         train_samples: 訓練サンプル数（0またはNoneで全データ）
         test_samples: テストサンプル数（0またはNoneで全データ）
     
     Returns:
         (train_images, train_labels), (test_images, test_labels): 全データ
         - MNIST/Fashion-MNIST: (N, 28, 28), グレースケール, uint8
+        - CIFAR-10/100: (N, 32, 32, 3), カラー（RGB）, uint8
         ※サンプリングは訓練ループ内で実施
     """
     if dataset_name == 'fashion_mnist':
         (train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.fashion_mnist.load_data()
+    elif dataset_name == 'cifar10':
+        (train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.cifar10.load_data()
+        # ラベルを1次元化（(N, 1) → (N,)）
+        train_labels = train_labels.flatten()
+        test_labels = test_labels.flatten()
+    elif dataset_name == 'cifar100_coarse':
+        # CIFAR-100 Coarse Labels（20 Superclass）
+        (train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.cifar100.load_data(label_mode='coarse')
+        # ラベルを1次元化（(N, 1) → (N,)）
+        train_labels = train_labels.flatten()
+        test_labels = test_labels.flatten()
+    elif dataset_name == 'cifar100':
+        # CIFAR-100 Fine Labels（100クラス）- デフォルト
+        (train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.cifar100.load_data(label_mode='fine')
+        # ラベルを1次元化（(N, 1) → (N,)）
+        train_labels = train_labels.flatten()
+        test_labels = test_labels.flatten()
     else:  # 'mnist'
         (train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.mnist.load_data()
     
@@ -2182,17 +2265,18 @@ def main():
     print(f"  時間ステップ (dt):      {hp.dt:.1f} ms")
     print(f"  膜抵抗 (R_m):           {hp.R_m:.1f} MΩ")
     print(f"  シミュレーション時間:   {hp.simulation_time:.1f} ms")
-    print(f"  LIF層使用:              有効 (全層LIF化)")
-    print(f"    - 入力層:             LIF + スパイク符号化")
-    print(f"    - 隠れ層・出力層:     LIF活性化関数")
-    print(f"  スパイク符号化方式:     {hp.spike_encoding_method}")
-    print(f"  スパイク最大発火率:     {hp.spike_max_rate} Hz")
-    print(f"  スパイクシミュレーション時間: {hp.spike_simulation_time} ms")
-    print(f"  スパイク時間ステップ:   {hp.spike_dt} ms")
+    print(f"  LIF層使用:              {'有効' if hp.enable_lif else '無効'}")
     print()
     print("【実行時設定パラメータ】")
     # データセット名の表示改善
-    if hp.fashion_mnist:
+    if hp.cifar100:
+        if hp.cifar100_coarse:
+            dataset_display = 'CIFAR-100 Coarse (20 Superclass)'
+        else:
+            dataset_display = 'CIFAR-100 Fine (100クラス)'
+    elif hp.cifar10:
+        dataset_display = 'CIFAR-10'
+    elif hp.fashion_mnist:
         dataset_display = 'Fashion-MNIST'
     else:  # mnist
         dataset_display = 'MNIST'
@@ -2244,16 +2328,62 @@ def main():
             9: "Ankle boot"
         }
         print(f"✅ Fashion-MNISTクラス名マッピング設定完了")
+    elif dataset_name == 'cifar10':
+        # CIFAR-10クラス名（標準的な10クラス）
+        class_names = {
+            0: "airplane",
+            1: "automobile",
+            2: "bird",
+            3: "cat",
+            4: "deer",
+            5: "dog",
+            6: "frog",
+            7: "horse",
+            8: "ship",
+            9: "truck"
+        }
+        print(f"✅ CIFAR-10クラス名マッピング設定完了")
+        print(f"✅ CIFAR10データセット（カラー画像）読み込み完了")
+    elif dataset_name == 'cifar100_coarse':
+        # CIFAR-100 Superclass（20クラス）名マッピング
+        class_names = {
+            0: "aquatic_mammals",
+            1: "fish",
+            2: "flowers",
+            3: "food_containers",
+            4: "fruit_vegetables",
+            5: "household_electrical",
+            6: "household_furniture",
+            7: "insects",
+            8: "large_carnivores",
+            9: "large_outdoor_things",
+            10: "natural_outdoor_scenes",
+            11: "large_omnivores_herbivores",
+            12: "medium_mammals",
+            13: "non_insect_invertebrates",
+            14: "people",
+            15: "reptiles",
+            16: "small_mammals",
+            17: "trees",
+            18: "vehicles_1",
+            19: "vehicles_2"
+        }
+        print(f"✅ CIFAR-100 Coarse Labels（20 Superclass）データセット読み込み完了")
+        print(f"   Superclass: aquatic_mammals, fish, flowers, food_containers, ...")
+    elif dataset_name == 'cifar100':
+        # CIFAR-100 Fine Labels（100クラス）は数値表示
+        print(f"✅ CIFAR-100 Fine Labels（100クラス）データセット読み込み完了")
+        print(f"   ※CIFAR-100は100クラスのため、クラス名は数値で表示されます")
     
     # ED法初期化
     print()
-    # 入力サイズの動的計算（グレースケール画像）
-    image_shape = train_images.shape[1:]  # (28, 28)
-    base_input_size = np.prod(image_shape)  # 784
+    # 入力サイズの動的計算（グレースケール/カラー自動対応）
+    image_shape = train_images.shape[1:]  # (28, 28) or (32, 32, 3)
+    base_input_size = np.prod(image_shape)  # 784 or 3072
     excitatory_size = base_input_size
     inhibitory_size = base_input_size
-    paired_input_size = excitatory_size + inhibitory_size  # 1568（E/Iペア化後）
-    output_size = hp.output_size  # 10
+    paired_input_size = excitatory_size + inhibitory_size  # 1568 or 6144（E/Iペア化後）
+    output_size = hp.output_size  # 10 or 100
     
     print(f"\n🧠 ネットワーク構造")
     print(f"   入力画像サイズ: {image_shape} = {base_input_size}ピクセル")
@@ -2577,8 +2707,8 @@ def main():
                 
                 ed_core.pure_ed_learning_step(sample, targets, outputs)
                 
-                # ヒートマップ更新（MNIST/Fashion-MNIST: 10サンプルごと）
-                update_interval = 10
+                # ヒートマップ更新（CIFAR-10の場合は頻度を下げる）
+                update_interval = 50 if dataset_name in ['cifar10', 'cifar100'] else 10
                 if heatmap_integration and total_samples % update_interval == 0:
                     spike_activities = convert_ed_outputs_to_spike_activities(
                         ed_core, sample, original_image_shape=image_shape

@@ -1,35 +1,118 @@
-# アップロード対象外のファイル
-# アップロードするのは以下のみ:
-# 1. ed_multi_lif_snn.py
-# 2. ed_multi_lif_snn_simple.py
-# 3. modules/
-# 4. README.md
-# 5. README_simple.md
+# ED-Multi SNN Publication Repository
+# This repository includes three main implementations and essential documentation
 
-# すべてのファイルをデフォルトで除外
-*
-
-# 必要なファイル・ディレクトリのみ許可
-!.gitignore
-!README.md
-!README_simple.md
-!LICENSE
-!ed_multi_lif_snn.py
-!ed_multi_lif_snn_simple.py
-
-# modulesディレクトリを許可
-!modules/
-!modules/**
-
-# Python関連の除外
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+
+# C extensions
 *.so
+
+# Distribution / packaging
 .Python
-*.egg-info/
-dist/
 build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webaskets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
 
 # IDE関連の除外
 .vscode/
@@ -41,3 +124,57 @@ build/
 # OS関連の除外
 .DS_Store
 Thumbs.db
+
+# Development files and scripts
+*_backup*
+backup/
+*.sh
+run_ed_main.sh
+run_ed_simple.sh
+
+# Exclude shell script documentation
+USAGE.md
+
+# Results and experiment data
+viz_results/
+
+# Exclude specific development txt/csv files but allow documentation
+!TECHNICAL_DOCS.md
+!PERFORMANCE_REPORT.md
+!lif_snn_learning_test_results.md
+!frelu_snn_learning_test_results.md
+
+# Allow specific documentation files
+!docs/ED法_解説資料.md
+
+# Exclude large log files and experiment data
+*.log
+experiment_*.txt
+results_*.csv
+output_*.csv
+data_*.npz
+model_*.pkl
+
+# Exclude unused module directories and files
+modules/data/
+modules/ed_learning/
+modules/utils/
+modules/visualization/
+modules/snn_heatmap_visualizer.py
+modules/snn/ed_core_fast_v2.py
+modules/snn/snn_network.py
+modules/snn/snn_network_fast.py
+modules/snn/snn_network_fast_v2.py
+
+# Include only essential files
+# Main implementations
+# - ed_multi_lif_snn.py (Complete LIF SNN)
+# - ed_multi_lif_snn_simple.py (Educational version)
+# - ed_multi_frelu_snn.py (FReLU high-speed version)
+# Documentation
+# - README.md, USAGE.md, TECHNICAL_DOCS.md, PERFORMANCE_REPORT.md
+# Essential modules only
+# - modules/accuracy_loss_verifier.py
+# - modules/data_loader.py
+# - modules/snn_heatmap_integration.py
+# - modules/snn/lif_neuron.py
