@@ -132,17 +132,14 @@ backup/
 run_ed_main.sh
 run_ed_simple.sh
 
-# Exclude shell script documentation
-USAGE.md
-
 # Results and experiment data
 viz_results/
 
 # Exclude specific development txt/csv files but allow documentation
 !TECHNICAL_DOCS.md
 !PERFORMANCE_REPORT.md
-!lif_snn_learning_test_results.md
-!frelu_snn_learning_test_results.md
+!test_results/lif_snn_learning_test_results.md
+!test_results/frelu_snn_learning_test_results.md
 
 # Allow specific documentation files
 !docs/ED法_解説資料.md

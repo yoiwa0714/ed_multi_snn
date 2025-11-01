@@ -47,7 +47,7 @@ ED法の詳細については、[ED法_解説資料.md](docs/ED法_解説資料.
 
 ### 📊 LIF版学習試行記録
 
-[**lif_snn_learning_test_results.md**](lif_snn_learning_test_results.md)
+[**lif_snn_learning_test_results.md**](test_results/lif_snn_learning_test_results.md)
 
 - **完全LIF版の学習結果**: Fashion-MNIST データセットでの複数試行記録
 - **最高達成正答率**: 80.83% (隠れ層4096,128,128ニューロン, 30エポック)
@@ -56,7 +56,7 @@ ED法の詳細については、[ED法_解説資料.md](docs/ED法_解説資料.
 
 ### 🚀 FReLU版学習試行記録
 
-[**frelu_snn_learning_test_results.md**](frelu_snn_learning_test_results.md)
+[**frelu_snn_learning_test_results.md**](test_results/frelu_snn_learning_test_results.md)
 
 - **FReLU版の実験結果**: ED法とFReLU活性化関数の組み合わせ検証
 - **ハイブリッド構成**: 入力層LIF + 隠れ層・出力層FReLUの性能評価
@@ -113,7 +113,10 @@ ed_multi_snn/
 ├── TECHNICAL_DOCS.md              # 技術ドキュメント（実装詳細）
 ├── PERFORMANCE_REPORT.md          # パフォーマンス分析レポート
 ├── USAGE.md                       # 使用方法詳細
-├── lif_snn_learning_test_results.md # 学習結果レポート
+│
+├── test_results/                  # 学習結果レポート
+│   ├── lif_snn_learning_test_results.md    # LIF版学習結果
+│   └── frelu_snn_learning_test_results.md  # FReLU版学習結果
 │
 ├── docs/                          # ドキュメント
 │   └── ED法_解説資料.md           # ED法理論解説

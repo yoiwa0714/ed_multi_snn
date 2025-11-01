@@ -109,7 +109,7 @@ python3 ed_multi_frelu_snn_backup.py --fashion --train 2048 --test 2048 --epochs
 
 
 3.
-python ed_multi_frelu_snn_backup.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/frelu_snn_fashion_hid2048_1024_epo20_ami0.5_dif1.0 --hidden 2048,1024 --epochs 20 --ami 0.5 --dif 1.0
+python ed_multi_frelu_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/frelu_snn_fashion_hid2048_1024_epo20_ami0.5_dif1.0 --hidden 2048,1024 --epochs 20 --ami 0.5 --dif 1.0
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -154,6 +154,72 @@ python ed_multi_frelu_snn_backup.py --viz --heatmap --fashion --seed 42 --train 
   リアルタイム可視化:     ON
   詳細表示:               OFF
   図表保存:               ON -> viz_results/frelu_snn_fashion_hid2048_1024_epo20_ami0.5_dif1.0
+
+viz_results/frelu_snn_fashion_hid2048_1024_epo20_ami0.5_dif1.0/realtime_viz_result_20251101_222341.png
+
+100%|█████████████| 20/20 [8:55:03<00:00, 1605.17s/epoch, 訓精=62.6%, テ精=62.9%, 訓エ=37.4%, テエ=37.1%]
+
+✅ 最終結果:
+   学習精度: 62.65%
+   テスト正答率: 61.67%
+
+
+4.
+python ed_multi_frelu_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/frelu_snn_fashion_hid2048_128_dif1.5_epo20 --hidden 2048,128 --epochs 20 --dif 1.5
+
+【ED法アルゴリズムパラメータ】
+  学習率 (alpha):         0.100
+  初期アミン濃度 (beta):  0.250
+  アミン拡散係数 (u1):    1.500
+  シグモイド閾値 (u0):    1.200
+  重み初期値1:            0.300
+  重み初期値2:            0.500
+
+【LIFニューロンパラメータ】
+  静止膜電位 (v_rest):    -65.0 mV
+  発火閾値 (v_threshold): -60.0 mV
+  リセット電位 (v_reset): -70.0 mV
+  膜時定数 (tau_m):       20.0 ms
+  不応期 (tau_ref):       2.0 ms
+  時間ステップ (dt):      1.0 ms
+  膜抵抗 (R_m):           10.0 MΩ
+  シミュレーション時間:   50.0 ms
+  LIF層使用:              入力層のみ (SNN)
+    - 入力層:             LIF + スパイク符号化
+    - 隠れ層・出力層:     FReLU活性化関数 (論文準拠)
+  FReLU仕様:              Funnel Activation (最適化版)
+    - 閾値パラメータ:     α=0.15 (69.6%実績ベース)
+    - Dale's Principle:   興奮性/抑制性ニューロン対応
+    - 数値安定性:         シグモイドスムージング適用
+    - 非線形関数:         max(x, αx) / min(x, -α|x|)
+  計算効率:               LIF比約10-50倍高速化
+  スパイク符号化方式:     poisson
+  スパイク最大発火率:     100.0 Hz
+  スパイクシミュレーション時間: 50.0 ms
+  スパイク時間ステップ:   1.0 ms
+
+【実行時設定パラメータ】
+  データセット:           Fashion-MNIST
+  訓練データ数:           2048
+  テストデータ数:         2048
+  エポック数:             20
+  隠れ層構造:             2048,128 (多層)
+  ミニバッチサイズ:       128 (ミニバッチ)
+  ランダムシード:         42
+  データシャッフル:       ON
+  リアルタイム可視化:     ON
+  詳細表示:               OFF
+  図表保存:               ON -> viz_results/frelu_snn_fashion_hid2048_128_dif1.5_epo20
+
+viz_results/frelu_snn_fashion_hid2048_128_dif1.5_epo20/realtime_viz_result_20251102_062334.png
+
+100%|█████████████| 20/20 [7:25:21<00:00, 1336.06s/epoch, 訓精=64.8%, テ精=74.6%, 訓エ=35.2%, テエ=25.4%]
+
+✅ 最終結果:
+   学習精度: 64.79%
+   テスト正答率: 76.71%
+
+
 
 
 
