@@ -132,6 +132,9 @@ backup/
 run_ed_main.sh
 run_ed_simple.sh
 
+# Exclude shell script documentation
+USAGE.md
+
 # Results and experiment data
 viz_results/
 
