@@ -16,30 +16,50 @@ ED法の詳細については、[ED法_解説資料.md](docs/ED法_解説資料.
 本実装は、生物学的な妥当性が低い「微分の連鎖律を用いた誤差逆伝播法」を使用せず、金子勇氏が考案された生物学的な妥当性の高い「ED法」による学習アルゴリズムを用いてMNISTとFashion-MNISTの画像分類を実現します。<br>
 なお、本実装ではすべてのニューロンがLIFニューロンで構成されている、完全なスパイキングニューラルネットワークをベースとしています。
 
-## 学習結果の可視化
+## ed_multi_lif_snn.pyによる学習結果例
 
-各バージョンでの実際の学習進捗をリアルタイム表示したグラフです。青線が学習精度、オレンジ線がテスト精度を示しています。
+ed_multi_lif_snn.pyによる、MNISTデータとFashion-MNISTデータの学習結果例を以下に示します。
 
-### 🧠 LIF版（完全SNN）学習結果
+### MNISTデータでの学習例
 
-<img src="viz_results_for_public/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_053840.png" alt="LIF版学習進捗" width="50%">
+<img src="viz_results_for_public/lif_mnist_256_lr0.15_e20/realtime_viz_result_20251102_113203.png" alt="MNIST学習結果" width="60%">
 
-**最高成績**: Fashion-MNIST テスト正答率 **80.83%** (学習精度: 81.27%)  
-設定: 隠れ層4096,128,128ニューロン, 30エポック, シード42
+・最高正答率: 87.60%
 
-### 📚 Simple版（実装学習用）学習結果
+・学習実行コマンド
 
-<img src="viz_results_for_public/simple_e30/realtime_viz_result_20251025_190644.png" alt="Simple版学習進捗" width="50%">
+```bash
+python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_mnist_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+```
 
-**教育用実装**: 基本的なED法+SNNの学習過程を理解しやすく可視化  
-設定: 30エポック学習での進捗グラフ
+### Fashion-MNISTデータでの学習例
 
-### 🚀 FReLU版（実装試験用）学習結果
+<img src="viz_results_for_public/lif_fashion_256_lr0.15_e20/realtime_viz_result_20251102_113256.png" alt="Fashion-MNIST学習結果" width="60%">
 
-<img src="viz_results_for_public/frelu_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251101_194556.png" alt="FReLU版学習進捗" width="50%">
+・最高正答率: 78.20%
 
-**実験的実装**: FReLU活性化関数とED法の組み合わせ検証  
-設定: 隠れ層4096,128ニューロン, 20エポック, Fashion-MNIST テスト正答率 73.19%
+・学習実行コマンド
+
+```bash
+python ed_multi_lif_snn.py --fashion --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_fashion_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+```
+
+## ed_multi_frelu_snn.pyによる学習結果例
+
+ed_multi_frelu_snn.pyはed_multi_lif_snn.pyの活性化関数を、試験的にFReLUに置き換えたコードです。
+ed_multi_frelu_snn.pyによる、Fashion-MNISTデータの学習結果例を以下に示します。
+
+### FReLU版 Fashion-MNISTデータでの学習例
+
+<img src="viz_results_for_public/frelu_snn_fashion_hid2048_128_dif1.5_epo20/realtime_viz_result_20251102_062334.png" alt="FReLU Fashion-MNIST学習結果" width="60%">
+
+・最高正答率: 76.71%
+
+・学習実行コマンド
+
+```bash
+python ed_multi_frelu_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/frelu_snn_fashion_hid2048_128_dif1.5_epo20 --hidden 2048,128 --epochs 20 --dif 1.5
+```
 
 ## 試行例(参考)
 
