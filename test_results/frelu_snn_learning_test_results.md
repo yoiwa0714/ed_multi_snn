@@ -79,7 +79,7 @@
   詳細表示:               OFF
 
   図表保存:               ON -> viz_results_for_public/frelu_snn_fashion_hid4096_128_epo20
-<img src="viz_results_for_public/frelu_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251101_194556.png" alt="学習進捗グラフ" width="600">
+<img src="../viz_results_for_public/frelu_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251101_194556.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 20/20 [10:51:02<00:00, 1953.13s/epoch, 訓精=74.2%, テ精=71.9%, 訓エ=25.8%, テエ=28.1%]
 
@@ -257,7 +257,7 @@
   詳細表示:               OFF
 
   図表保存:               ON -> viz_results_for_public/frelu_snn_fashion_hid2048_1024_epo20_ami0.5_dif1.0
-<img src="viz_results_for_public/frelu_snn_fashion_hid2048_1024_epo20_ami0.5_dif1.0/realtime_viz_result_20251101_222341.png" alt="学習進捗グラフ" width="600">
+<img src="../viz_results_for_public/frelu_snn_fashion_hid2048_1024_epo20_ami0.5_dif1.0/realtime_viz_result_20251101_222341.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 20/20 [8:55:03<00:00, 1605.17s/epoch, 訓精=62.6%, テ精=62.9%, 訓エ=37.4%, テエ=37.1%]
 
@@ -347,7 +347,7 @@
   詳細表示:               OFF
 
   図表保存:               ON -> viz_results_for_public/frelu_snn_fashion_hid2048_128_dif1.5_epo20
-<img src="viz_results_for_public/frelu_snn_fashion_hid2048_128_dif1.5_epo20/realtime_viz_result_20251102_062334.png" alt="学習進捗グラフ" width="600">
+<img src="../viz_results_for_public/frelu_snn_fashion_hid2048_128_dif1.5_epo20/realtime_viz_result_20251102_062334.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 20/20 [7:25:21<00:00, 1336.06s/epoch, 訓精=64.8%, テ精=74.6%, 訓エ=35.2%, テエ=25.4%]
 
@@ -437,7 +437,7 @@
   詳細表示:               OFF
 
   図表保存:               ON -> viz_results_for_public/frelu_snn_fashion_hid2048_1024_128_ami1.0_dif1.5_epo5
-<img src="viz_results_for_public/frelu_snn_fashion_hid2048_1024_128_ami1.0_dif1.5_epo5/realtime_viz_result_20251102_085301.png" alt="学習進捗グラフ" width="600">
+<img src="../viz_results_for_public/frelu_snn_fashion_hid2048_1024_128_ami1.0_dif1.5_epo5/realtime_viz_result_20251102_085301.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 5/5 [1:14:56<00:00, 899.26s/epoch, 訓精=67.4%, テ精=61.8%, 訓エ=32.6%, テエ=38.2%]
 
@@ -527,7 +527,7 @@
   詳細表示:               OFF
 
   図表保存:               ON -> viz_results_for_public/frelu_snn_fashion_hid2048_1024_128_ami1.0_dif1.5_w10.8_epo5
-<img src="viz_results_for_public/frelu_snn_fashion_hid2048_1024_128_ami1.0_dif1.5_w10.8_epo5/realtime_viz_result_20251102_093953.png" alt="学習進捗グラフ" width="600">
+<img src="../viz_results_for_public/frelu_snn_fashion_hid2048_1024_128_ami1.0_dif1.5_w10.8_epo5/realtime_viz_result_20251102_093953.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 5/5 [1:13:33<00:00, 882.78s/epoch, 訓精=71.1%, テ精=68.2%, 訓エ=28.9%, テエ=31.8%]
 
@@ -617,7 +617,7 @@
   詳細表示:               OFF
 
   図表保存:               ON -> viz_results_for_public/frelu_snn_fashion_hid2048_1024_128_ami1.0_dif1.5_w10.8_w21.0_epo5
-<img src="viz_results_for_public/frelu_snn_fashion_hid2048_1024_128_ami1.0_dif1.5_w10.8_w21.0_epo5/realtime_viz_result_20251102_094056.png" alt="学習進捗グラフ" width="600">
+<img src="../viz_results_for_public/frelu_snn_fashion_hid2048_1024_128_ami1.0_dif1.5_w10.8_w21.0_epo5/realtime_viz_result_20251102_094056.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 5/5 [1:13:27<00:00, 881.45s/epoch, 訓精=66.0%, テ精=68.7%, 訓エ=34.0%, テエ=31.3%]
 
