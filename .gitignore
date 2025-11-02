@@ -138,6 +138,9 @@ USAGE.md
 # Results and experiment data
 viz_results/
 
+# Allow public visualization results for documentation
+!viz_results_for_public/
+
 # Exclude specific development txt/csv files but allow documentation
 !TECHNICAL_DOCS.md
 !PERFORMANCE_REPORT.md
