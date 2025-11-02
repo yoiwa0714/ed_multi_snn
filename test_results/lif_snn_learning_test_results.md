@@ -1,5 +1,4 @@
-1.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results/lif_snn_hid1024_epo10 --hidden 1024
+## 1.python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results/lif_snn_hid1024_epo10 --hidden 1024
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -40,8 +39,9 @@ viz_results/lif_snn_hid1024_epo10/realtime_viz_result_20251027_211231.png
    テスト正答率: 76.37%
 
 
-2.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results/lif_snn_hid1024_epo10 --hidden 2048
+---
+
+## 2.python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results/lif_snn_hid1024_epo10 --hidden 2048
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -82,8 +82,9 @@ viz_results/lif_snn_hid1024_epo10/realtime_viz_result_20251027_214044.png
    テスト正答率: 72.07%
 
 
-3.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096 --epochs 30
+---
+
+## 3.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096 --epochs 30
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -126,8 +127,9 @@ viz_results/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251028_234921.pn
    テスト正答率: 78.12%
 
 
-4.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128 --epochs 30
+---
+
+## 4.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128 --epochs 30
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -170,8 +172,9 @@ viz_results/lif_snn_fashion_hid4096_128_epo30/realtime_viz_result_20251029_00212
    テスト正答率: 80.62%
 
 
-5.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_64_epo30 --hidden 4096,128,64 --epochs 30
+---
+
+## 5.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_64_epo30 --hidden 4096,128,64 --epochs 30
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -214,8 +217,9 @@ viz_results/lif_snn_fashion_hid4096_128_64_epo30/realtime_viz_result_20251029_03
    テスト正答率: 79.44%
 
 
-6.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128,128 --epochs 30
+---
+
+## 6.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128,128 --epochs 30
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -258,8 +262,9 @@ viz_results/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_004310.pn
    テスト正答率: 78.96%
 
 
-7.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 4096 --test 4096 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128 --epochs 30
+---
+
+## 7.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 4096 --test 4096 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128 --epochs 30
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -302,8 +307,9 @@ viz_results/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_044924.pn
    テスト正答率: 75.05%
 
 
-8.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 4096 --test 4096 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128,128 --epochs 30
+---
+
+## 8.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 4096 --test 4096 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128,128 --epochs 30
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -346,8 +352,10 @@ viz_results/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_053840.pn
    テスト正答率: 80.83%
 
 
-9.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --e
+---
+
+## 9.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --e
+
 pochs 20 --lr 0.2
 
 【ED法アルゴリズムパラメータ】
@@ -391,8 +399,9 @@ viz_results/lif_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251030_22252
    テスト正答率: 75.34%
 
 
-10.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --ami 0.5
+---
+
+## 10.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --ami 0.5
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -435,8 +444,9 @@ viz_results/lif_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251030_22301
    テスト正答率: 78.12%
 
 
-11.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --dif 1.0
+---
+
+## 11.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --dif 1.0
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -479,8 +489,9 @@ viz_results/lif_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251030_22302
    テスト正答率: 76.61%
 
 
-12.
-python ed_multi_frelu_snn_backup.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/frelu_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --dif 1.0
+---
+
+## 12.python ed_multi_frelu_snn_backup.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/frelu_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --dif 1.0
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -527,9 +538,9 @@ python ed_multi_frelu_snn_backup.py --viz --heatmap --fashion --seed 42 --train 
   図表保存:               ON -> viz_results/frelu_snn_fashion_hid4096_128_epo20
 
 
+---
 
-13.
-python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0 --hidden 2048,1024 --epochs 20 --ami 1.0 --dif 1.0
+## 13.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0 --hidden 2048,1024 --epochs 20 --ami 1.0 --dif 1.0
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.100
@@ -578,8 +589,9 @@ viz_results/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0/realtime_viz_result
    テスト正答率: 70.61%
 
 
-14.MNIST
-python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
+---
+
+## 14.python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.150
@@ -628,8 +640,9 @@ viz_results/lif_fashion_128_lr0.15_e10/realtime_viz_result_20251102_101845.png
    テスト正答率: 87.20%
 
 
-15.Fashion-MNIST
-python ed_multi_lif_snn.py --fashion --train 1000 --test 100 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
+---
+
+## 15.python ed_multi_lif_snn.py --fashion --train 1000 --test 100 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.150
@@ -678,8 +691,9 @@ viz_results/lif_fashion_128_lr0.15_e10/realtime_viz_result_20251102_101127.png
    テスト正答率: 83.00%
 
 
-16.
-python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_mnist_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+---
+
+## 16.python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_mnist_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.150
@@ -728,8 +742,9 @@ viz_results/lif_mnist_256_lr0.15_e20/realtime_viz_result_20251102_113203.png
    テスト正答率: 87.60%
 
 
-17.
-python ed_multi_lif_snn.py --fashion --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+---
+
+## 17.python ed_multi_lif_snn.py --fashion --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
 
 【ED法アルゴリズムパラメータ】
   学習率 (alpha):         0.150
@@ -776,67 +791,3 @@ viz_results/lif_fashion_256_lr0.15_e20/realtime_viz_result_20251102_113256.png
 ✅ 最終結果:
    学習精度: 78.00%
    テスト正答率: 78.20%
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
