@@ -181,3 +181,7 @@ modules/snn/snn_network_fast_v2.py
 # - modules/data_loader.py
 # - modules/snn_heatmap_integration.py
 # - modules/snn/lif_neuron.py
+
+# Exclude development/experimental files that should not be published
+ed_snn_v025.py
+ed_snn_mnist_published.py
