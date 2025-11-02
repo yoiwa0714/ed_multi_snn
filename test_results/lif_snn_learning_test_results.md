@@ -1,4 +1,4 @@
-## 1.python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results/lif_snn_hid1024_epo10 --hidden 1024
+## 1.python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results_for_public/lif_snn_hid1024_epo10 --hidden 1024
 
 【ED法アルゴリズムパラメータ】
 
@@ -33,16 +33,16 @@
   データシャッフル:       ON
   リアルタイム可視化:     ON
   詳細表示:               OFF
-  図表保存:               ON -> viz_results/lif_snn_hid1024_epo10
+  図表保存:               ON -> viz_results_for_public/lif_snn_hid1024_epo10
 
-<img src="viz_results/lif_snn_hid1024_epo10/realtime_viz_result_20251027_211231.png" alt="学習進捗グラフ" width="600">
+<img src="viz_results_for_public/lif_snn_hid1024_epo10/realtime_viz_result_20251027_211231.png" alt="学習進捗グラフ" width="600">
 
 ✅ 最終結果:
    学習精度: 73.05%
    テスト正答率: 76.37%
 
 
-## 2.python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results/lif_snn_hid1024_epo10 --hidden 2048
+## 2.python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results_for_public/lif_snn_hid1024_epo10 --hidden 2048
 
 【ED法アルゴリズムパラメータ】
 
@@ -87,15 +87,15 @@
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_hid1024_epo10
-<img src="viz_results/lif_snn_hid1024_epo10/realtime_viz_result_20251027_214044.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_hid1024_epo10
+<img src="viz_results_for_public/lif_snn_hid1024_epo10/realtime_viz_result_20251027_214044.png" alt="学習進捗グラフ" width="600">
 
 ✅ 最終結果:
    学習精度: 78.52%
    テスト正答率: 72.07%
 
 
-## 3.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096 --epochs 30
+## 3.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_epo30 --hidden 4096 --epochs 30
 
 【ED法アルゴリズムパラメータ】
 
@@ -151,8 +151,8 @@
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid4096_epo30
-<img src="viz_results/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251028_234921.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_epo30
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251028_234921.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 30/30 [4:17:48<00:00, 515.63s/epoch, 訓精=76.0%, テ精=81.0%, 訓エ=24.0%, テエ=19.0%]
 
@@ -161,7 +161,7 @@
    テスト正答率: 78.12%
 
 
-## 4.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128 --epochs 30
+## 4.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_epo30 --hidden 4096,128 --epochs 30
 
 【ED法アルゴリズムパラメータ】
 
@@ -217,8 +217,8 @@
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid4096_128_epo30
-<img src="viz_results/lif_snn_fashion_hid4096_128_epo30/realtime_viz_result_20251029_002128.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_128_epo30
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_128_epo30/realtime_viz_result_20251029_002128.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 30/30 [4:46:53<00:00, 573.79s/epoch, 訓精=79.1%, テ精=78.3%, 訓エ=20.9%, テエ=21.7%]
 
@@ -227,7 +227,7 @@
    テスト正答率: 80.62%
 
 
-## 5.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_64_epo30 --hidden 4096,128,64 --epochs 30
+## 5.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_128_64_epo30 --hidden 4096,128,64 --epochs 30
 
 【ED法アルゴリズムパラメータ】
 
@@ -283,8 +283,8 @@
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid4096_128_64_epo30
-<img src="viz_results/lif_snn_fashion_hid4096_128_64_epo30/realtime_viz_result_20251029_031304.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_128_64_epo30
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_128_64_epo30/realtime_viz_result_20251029_031304.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 30/30 [5:04:17<00:00, 608.60s/epoch, 訓精=81.2%, テ精=78.3%, 訓エ=18.8%, テエ=21.7%]
 
@@ -293,7 +293,7 @@
    テスト正答率: 79.44%
 
 
-## 6.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128,128 --epochs 30
+## 6.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_epo30 --hidden 4096,128,128 --epochs 30
 
 【ED法アルゴリズムパラメータ】
 
@@ -349,8 +349,8 @@
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid4096_epo30
-<img src="viz_results/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_004310.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_epo30
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_004310.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 30/30 [5:29:54<00:00, 659.82s/epoch, 訓精=79.9%, テ精=78.6%, 訓エ=20.1%, テエ=21.4%]
 
@@ -359,7 +359,7 @@
    テスト正答率: 78.96%
 
 
-## 7.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 4096 --test 4096 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128 --epochs 30
+## 7.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 4096 --test 4096 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_epo30 --hidden 4096,128 --epochs 30
 
 【ED法アルゴリズムパラメータ】
 
@@ -415,8 +415,8 @@
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid4096_epo30
-<img src="viz_results/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_044924.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_epo30
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_044924.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 30/30 [9:32:17<00:00, 1144.60s/epoch, 訓精=76.6%, テ精=75.3%, 訓エ=23.4%, テエ=24.7%]
 
@@ -425,7 +425,7 @@
    テスト正答率: 75.05%
 
 
-## 8.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 4096 --test 4096 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_epo30 --hidden 4096,128,128 --epochs 30
+## 8.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 4096 --test 4096 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_epo30 --hidden 4096,128,128 --epochs 30
 
 【ED法アルゴリズムパラメータ】
 
@@ -481,8 +481,8 @@
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid4096_epo30]
-<img src="viz_results/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_053840.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_epo30]
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_053840.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 30/30 [10:15:48<00:00, 1231.62s/epoch, 訓精=81.3%, テ精=80.8%, 訓エ=18.7%, テエ=19.2%]
 
@@ -491,7 +491,7 @@
    テスト正答率: 80.83%
 
 
-## 9.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --e
+## 9.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --e
 pochs 20 --lr 0.2
 
 【ED法アルゴリズムパラメータ】
@@ -548,8 +548,8 @@ pochs 20 --lr 0.2
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid4096_128_epo20
-<img src="viz_results/lif_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251030_222526.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_128_epo20
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251030_222526.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 20/20 [3:19:18<00:00, 597.94s/epoch, 訓精=78.7%, テ精=77.0%, 訓エ=21.3%, テエ=23.0%]
 
@@ -558,7 +558,7 @@ pochs 20 --lr 0.2
    テスト正答率: 75.34%
 
 
-## 10.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --ami 0.5
+## 10.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --ami 0.5
 
 【ED法アルゴリズムパラメータ】
 
@@ -614,8 +614,8 @@ pochs 20 --lr 0.2
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid4096_128_epo20
-<img src="viz_results/lif_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251030_223015.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_128_epo20
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251030_223015.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 20/20 [3:20:02<00:00, 600.15s/epoch, 訓精=79.0%, テ精=79.2%, 訓エ=21.0%, テエ=20.8%]
 
@@ -624,7 +624,7 @@ pochs 20 --lr 0.2
    テスト正答率: 78.12%
 
 
-## 11.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --dif 1.0
+## 11.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --dif 1.0
 
 【ED法アルゴリズムパラメータ】
 
@@ -680,8 +680,8 @@ pochs 20 --lr 0.2
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid4096_128_epo20
-<img src="viz_results/lif_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251030_223029.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_128_epo20
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251030_223029.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 20/20 [3:18:32<00:00, 595.60s/epoch, 訓精=78.9%, テ精=78.0%, 訓エ=21.1%, テエ=22.0%]
 
@@ -690,7 +690,7 @@ pochs 20 --lr 0.2
    テスト正答率: 76.61%
 
 
-## 12.python ed_multi_frelu_snn_backup.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/frelu_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --dif 1.0
+## 12.python ed_multi_frelu_snn_backup.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/frelu_snn_fashion_hid4096_128_epo20 --hidden 4096,128 --epochs 20 --dif 1.0
 
 【ED法アルゴリズムパラメータ】
 
@@ -770,10 +770,10 @@ pochs 20 --lr 0.2
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/frelu_snn_fashion_hid4096_128_epo20
+  図表保存:               ON -> viz_results_for_public/frelu_snn_fashion_hid4096_128_epo20
 
 
-## 13.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0 --hidden 2048,1024 --epochs 20 --ami 1.0 --dif 1.0
+## 13.python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0 --hidden 2048,1024 --epochs 20 --ami 1.0 --dif 1.0
 
 【ED法アルゴリズムパラメータ】
 
@@ -841,8 +841,8 @@ pochs 20 --lr 0.2
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0
-<img src="viz_results/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0/realtime_viz_result_20251101_190352.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0
+<img src="viz_results_for_public/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0/realtime_viz_result_20251101_190352.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 20/20 [2:54:08<00:00, 522.44s/epoch, 訓精=74.4%, テ精=72.0%, 訓エ=25.6%, テエ=28.0%]
 
@@ -851,7 +851,7 @@ pochs 20 --lr 0.2
    テスト正答率: 70.61%
 
 
-## 14.python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
+## 14.python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
 
 【ED法アルゴリズムパラメータ】
 
@@ -919,8 +919,8 @@ pochs 20 --lr 0.2
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_fashion_128_lr0.15_e10
-<img src="viz_results/lif_fashion_128_lr0.15_e10/realtime_viz_result_20251102_101845.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_fashion_128_lr0.15_e10
+<img src="viz_results_for_public/lif_fashion_128_lr0.15_e10/realtime_viz_result_20251102_101845.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 10/10 [26:20<00:00, 158.02s/epoch, 訓精=87.3%, テ精=86.0%, 訓エ=12.7%, テエ=14.0%]
 
@@ -929,7 +929,7 @@ pochs 20 --lr 0.2
    テスト正答率: 87.20%
 
 
-## 15.python ed_multi_lif_snn.py --fashion --train 1000 --test 100 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
+## 15.python ed_multi_lif_snn.py --fashion --train 1000 --test 100 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
 
 【ED法アルゴリズムパラメータ】
 
@@ -997,8 +997,8 @@ pochs 20 --lr 0.2
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_fashion_128_lr0.15_e10
-<img src="viz_results/lif_fashion_128_lr0.15_e10/realtime_viz_result_20251102_101127.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_fashion_128_lr0.15_e10
+<img src="viz_results_for_public/lif_fashion_128_lr0.15_e10/realtime_viz_result_20251102_101127.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 10/10 [20:46<00:00, 124.63s/epoch, 訓精=78.8%, テ精=78.0%, 訓エ=21.2%, テエ=22.0%]
 
@@ -1007,7 +1007,7 @@ pochs 20 --lr 0.2
    テスト正答率: 83.00%
 
 
-## 16.python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_mnist_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+## 16.python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_mnist_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
 
 【ED法アルゴリズムパラメータ】
 
@@ -1075,8 +1075,8 @@ pochs 20 --lr 0.2
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_mnist_256_lr0.15_e20
-<img src="viz_results/lif_mnist_256_lr0.15_e20/realtime_viz_result_20251102_113203.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_mnist_256_lr0.15_e20
+<img src="viz_results_for_public/lif_mnist_256_lr0.15_e20/realtime_viz_result_20251102_113203.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 20/20 [52:09<00:00, 156.46s/epoch, 訓精=89.6%, テ精=89.2%, 訓エ=10.4%, テエ=10.8%]
 
@@ -1085,7 +1085,7 @@ pochs 20 --lr 0.2
    テスト正答率: 87.60%
 
 
-## 17.python ed_multi_lif_snn.py --fashion --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+## 17.python ed_multi_lif_snn.py --fashion --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_fashion_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
 
 【ED法アルゴリズムパラメータ】
 
@@ -1153,8 +1153,8 @@ pochs 20 --lr 0.2
 
   詳細表示:               OFF
 
-  図表保存:               ON -> viz_results/lif_fashion_256_lr0.15_e20
-<img src="viz_results/lif_fashion_256_lr0.15_e20/realtime_viz_result_20251102_113256.png" alt="学習進捗グラフ" width="600">
+  図表保存:               ON -> viz_results_for_public/lif_fashion_256_lr0.15_e20
+<img src="viz_results_for_public/lif_fashion_256_lr0.15_e20/realtime_viz_result_20251102_113256.png" alt="学習進捗グラフ" width="600">
 
 100%|█████████████| 20/20 [52:31<00:00, 157.57s/epoch, 訓精=78.0%, テ精=80.0%, 訓エ=22.0%, テエ=20.0%]
 
