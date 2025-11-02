@@ -578,6 +578,218 @@ viz_results/lif_snn_fashion_hid2048_1024_epo20_ami1.0_dif1.0/realtime_viz_result
    テスト正答率: 70.61%
 
 
+14.MNIST
+python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
+
+【ED法アルゴリズムパラメータ】
+  学習率 (alpha):         0.150
+  初期アミン濃度 (beta):  0.250
+  アミン拡散係数 (u1):    0.500
+  シグモイド閾値 (u0):    1.200
+  重み初期値1:            0.300
+  重み初期値2:            0.500
+
+【LIFニューロンパラメータ】
+  静止膜電位 (v_rest):    -65.0 mV
+  発火閾値 (v_threshold): -60.0 mV
+  リセット電位 (v_reset): -70.0 mV
+  膜時定数 (tau_m):       20.0 ms
+  不応期 (tau_ref):       2.0 ms
+  時間ステップ (dt):      1.0 ms
+  膜抵抗 (R_m):           10.0 MΩ
+  シミュレーション時間:   50.0 ms
+  LIF層使用:              有効 (全層LIF化)
+    - 入力層:             LIF + スパイク符号化
+    - 隠れ層・出力層:     LIF活性化関数
+  スパイク符号化方式:     poisson
+  スパイク最大発火率:     150.0 Hz
+  スパイクシミュレーション時間: 50.0 ms
+  スパイク時間ステップ:   1.0 ms
+
+【実行時設定パラメータ】
+  データセット:           MNIST
+  訓練データ数:           1000
+  テストデータ数:         500
+  エポック数:             10
+  隠れ層構造:             128 (単層)
+  ミニバッチサイズ:       128 (ミニバッチ)
+  ランダムシード:         ランダム
+  データシャッフル:       ON
+  リアルタイム可視化:     ON
+  詳細表示:               OFF
+  図表保存:               ON -> viz_results/lif_fashion_128_lr0.15_e10
+
+viz_results/lif_fashion_128_lr0.15_e10/realtime_viz_result_20251102_101845.png
+
+100%|█████████████| 10/10 [26:20<00:00, 158.02s/epoch, 訓精=87.3%, テ精=86.0%, 訓エ=12.7%, テエ=14.0%]
+
+✅ 最終結果:
+   学習精度: 87.30%
+   テスト正答率: 87.20%
+
+
+15.Fashion-MNIST
+python ed_multi_lif_snn.py --fashion --train 1000 --test 100 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_128_lr0.15_e10 --epochs 10 --hidden 128 --lr 0.15
+
+【ED法アルゴリズムパラメータ】
+  学習率 (alpha):         0.150
+  初期アミン濃度 (beta):  0.250
+  アミン拡散係数 (u1):    0.500
+  シグモイド閾値 (u0):    1.200
+  重み初期値1:            0.300
+  重み初期値2:            0.500
+
+【LIFニューロンパラメータ】
+  静止膜電位 (v_rest):    -65.0 mV
+  発火閾値 (v_threshold): -60.0 mV
+  リセット電位 (v_reset): -70.0 mV
+  膜時定数 (tau_m):       20.0 ms
+  不応期 (tau_ref):       2.0 ms
+  時間ステップ (dt):      1.0 ms
+  膜抵抗 (R_m):           10.0 MΩ
+  シミュレーション時間:   50.0 ms
+  LIF層使用:              有効 (全層LIF化)
+    - 入力層:             LIF + スパイク符号化
+    - 隠れ層・出力層:     LIF活性化関数
+  スパイク符号化方式:     poisson
+  スパイク最大発火率:     150.0 Hz
+  スパイクシミュレーション時間: 50.0 ms
+  スパイク時間ステップ:   1.0 ms
+
+【実行時設定パラメータ】
+  データセット:           Fashion-MNIST
+  訓練データ数:           1000
+  テストデータ数:         100
+  エポック数:             10
+  隠れ層構造:             128 (単層)
+  ミニバッチサイズ:       128 (ミニバッチ)
+  ランダムシード:         ランダム
+  データシャッフル:       ON
+  リアルタイム可視化:     ON
+  詳細表示:               OFF
+  図表保存:               ON -> viz_results/lif_fashion_128_lr0.15_e10
+
+viz_results/lif_fashion_128_lr0.15_e10/realtime_viz_result_20251102_101127.png
+
+100%|█████████████| 10/10 [20:46<00:00, 124.63s/epoch, 訓精=78.8%, テ精=78.0%, 訓エ=21.2%, テエ=22.0%]
+
+✅ 最終結果:
+   学習精度: 78.80%
+   テスト正答率: 83.00%
+
+
+16.
+python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_mnist_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+
+【ED法アルゴリズムパラメータ】
+  学習率 (alpha):         0.150
+  初期アミン濃度 (beta):  0.250
+  アミン拡散係数 (u1):    0.500
+  シグモイド閾値 (u0):    1.200
+  重み初期値1:            0.300
+  重み初期値2:            0.500
+
+【LIFニューロンパラメータ】
+  静止膜電位 (v_rest):    -65.0 mV
+  発火閾値 (v_threshold): -60.0 mV
+  リセット電位 (v_reset): -70.0 mV
+  膜時定数 (tau_m):       20.0 ms
+  不応期 (tau_ref):       2.0 ms
+  時間ステップ (dt):      1.0 ms
+  膜抵抗 (R_m):           10.0 MΩ
+  シミュレーション時間:   50.0 ms
+  LIF層使用:              有効 (全層LIF化)
+    - 入力層:             LIF + スパイク符号化
+    - 隠れ層・出力層:     LIF活性化関数
+  スパイク符号化方式:     poisson
+  スパイク最大発火率:     150.0 Hz
+  スパイクシミュレーション時間: 50.0 ms
+  スパイク時間ステップ:   1.0 ms
+
+【実行時設定パラメータ】
+  データセット:           MNIST
+  訓練データ数:           1000
+  テストデータ数:         500
+  エポック数:             20
+  隠れ層構造:             256 (単層)
+  ミニバッチサイズ:       128 (ミニバッチ)
+  ランダムシード:         ランダム
+  データシャッフル:       ON
+  リアルタイム可視化:     ON
+  詳細表示:               OFF
+  図表保存:               ON -> viz_results/lif_mnist_256_lr0.15_e20
+
+viz_results/lif_mnist_256_lr0.15_e20/realtime_viz_result_20251102_113203.png
+
+100%|█████████████| 20/20 [52:09<00:00, 156.46s/epoch, 訓精=89.6%, テ精=89.2%, 訓エ=10.4%, テエ=10.8%]
+
+✅ 最終結果:
+   学習精度: 89.60%
+   テスト正答率: 87.60%
+
+
+17.
+python ed_multi_lif_snn.py --fashion --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results/lif_fashion_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+
+【ED法アルゴリズムパラメータ】
+  学習率 (alpha):         0.150
+  初期アミン濃度 (beta):  0.250
+  アミン拡散係数 (u1):    0.500
+  シグモイド閾値 (u0):    1.200
+  重み初期値1:            0.300
+  重み初期値2:            0.500
+
+【LIFニューロンパラメータ】
+  静止膜電位 (v_rest):    -65.0 mV
+  発火閾値 (v_threshold): -60.0 mV
+  リセット電位 (v_reset): -70.0 mV
+  膜時定数 (tau_m):       20.0 ms
+  不応期 (tau_ref):       2.0 ms
+  時間ステップ (dt):      1.0 ms
+  膜抵抗 (R_m):           10.0 MΩ
+  シミュレーション時間:   50.0 ms
+  LIF層使用:              有効 (全層LIF化)
+    - 入力層:             LIF + スパイク符号化
+    - 隠れ層・出力層:     LIF活性化関数
+  スパイク符号化方式:     poisson
+  スパイク最大発火率:     150.0 Hz
+  スパイクシミュレーション時間: 50.0 ms
+  スパイク時間ステップ:   1.0 ms
+
+【実行時設定パラメータ】
+  データセット:           Fashion-MNIST
+  訓練データ数:           1000
+  テストデータ数:         500
+  エポック数:             20
+  隠れ層構造:             256 (単層)
+  ミニバッチサイズ:       128 (ミニバッチ)
+  ランダムシード:         ランダム
+  データシャッフル:       ON
+  リアルタイム可視化:     ON
+  詳細表示:               OFF
+  図表保存:               ON -> viz_results/lif_fashion_256_lr0.15_e20
+
+viz_results/lif_fashion_256_lr0.15_e20/realtime_viz_result_20251102_113256.png
+
+100%|█████████████| 20/20 [52:31<00:00, 157.57s/epoch, 訓精=78.0%, テ精=80.0%, 訓エ=22.0%, テエ=20.0%]
+
+✅ 最終結果:
+   学習精度: 78.00%
+   テスト正答率: 78.20%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
