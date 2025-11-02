@@ -22,24 +22,24 @@ ED法の詳細については、[ED法_解説資料.md](docs/ED法_解説資料.
 
 ### 🧠 LIF版（完全SNN）学習結果
 
-<img src="viz_results/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_053840.png" alt="LIF版学習進捗" width="50%">
+<img src="viz_results_for_public/lif_snn_fashion_hid4096_epo30/realtime_viz_result_20251030_053840.png" alt="LIF版学習進捗" width="50%">
 
 **最高成績**: Fashion-MNIST テスト正答率 **80.83%** (学習精度: 81.27%)  
 設定: 隠れ層4096,128,128ニューロン, 30エポック, シード42
 
 ### 📚 Simple版（実装学習用）学習結果
 
-<img src="viz_results/simple_e30/realtime_viz_result_20251025_190644.png" alt="Simple版学習進捗" width="50%">
+<img src="viz_results_for_public/simple_e30/realtime_viz_result_20251025_190644.png" alt="Simple版学習進捗" width="50%">
 
 **教育用実装**: 基本的なED法+SNNの学習過程を理解しやすく可視化  
 設定: 30エポック学習での進捗グラフ
 
 ### 🚀 FReLU版（実装試験用）学習結果
 
-<img src="viz_results/frelu_snn_fashion_hid4096_128_epo20/realtime_viz_result_placeholder.png" alt="FReLU版学習進捗" width="50%">
+<img src="viz_results_for_public/frelu_snn_fashion_hid4096_128_epo20/realtime_viz_result_20251101_194556.png" alt="FReLU版学習進捗" width="50%">
 
 **実験的実装**: FReLU活性化関数とED法の組み合わせ検証  
-設定: 隠れ層4096,128ニューロン, 20エポック（実行中のため暫定表示）
+設定: 隠れ層4096,128ニューロン, 20エポック, Fashion-MNIST テスト正答率 73.19%
 
 ## 試行例(参考)
 
