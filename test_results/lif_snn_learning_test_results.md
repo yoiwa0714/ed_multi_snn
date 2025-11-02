@@ -1,16 +1,13 @@
 ## 1.python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results_for_public/lif_snn_hid1024_epo10 --hidden 1024
 
 【ED法アルゴリズムパラメータ】
-
   学習率 (alpha):         0.100<br>
   初期アミン濃度 (beta):  0.250<br>
   アミン拡散係数 (u1):    0.500<br>
   シグモイド閾値 (u0):    1.200<br>
   重み初期値1:            0.300<br>
   重み初期値2:            0.500<br>
-
 【LIFニューロンパラメータ】
-
   静止膜電位 (v_rest):    -65.0 mV<br>
   発火閾値 (v_threshold): -60.0 mV<br>
   リセット電位 (v_reset): -70.0 mV<br>
@@ -20,7 +17,6 @@
   膜抵抗 (R_m):           10.0 MΩ<br>
   シミュレーション時間:   50.0 ms<br>
   LIF層使用:              無効<br>
-
 【実行時設定パラメータ】
 
   データセット:           Fashion-MNIST<br>
@@ -44,16 +40,13 @@
 ## 2.python ed_multi_lif_snn.py --viz --heatmap --fashion --epochs 10 --save_fig viz_results_for_public/lif_snn_hid1024_epo10 --hidden 2048
 
 【ED法アルゴリズムパラメータ】
-
   学習率 (alpha):         0.100<br>
   初期アミン濃度 (beta):  0.250<br>
   アミン拡散係数 (u1):    0.500<br>
   シグモイド閾値 (u0):    1.200<br>
   重み初期値1:            0.300<br>
   重み初期値2:            0.500<br>
-
 【LIFニューロンパラメータ】
-
   静止膜電位 (v_rest):    -65.0 mV<br>
   発火閾値 (v_threshold): -60.0 mV<br>
   リセット電位 (v_reset): -70.0 mV<br>
@@ -63,7 +56,6 @@
   膜抵抗 (R_m):           10.0 MΩ<br>
   シミュレーション時間:   50.0 ms<br>
   LIF層使用:              無効<br>
-
 【実行時設定パラメータ】
 
 データセット:           Fashion-MNIST
