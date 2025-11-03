@@ -540,7 +540,7 @@ Repository: https://github.com/yoiwa0714/ed_multi_snn
                              help=f'アミン濃度 (beta) - 初期誤差信号の強度（デフォルト: {self.initial_amine}）')
         ed_group.add_argument('--dif', type=float, default=self.diffusion_rate,
                              metavar='FLOAT',
-                             help=f'拡散係数 (u1) - アミン（誤差信号）の拡散率（デフォルト: {self.diffusion_rate}）')
+                             help=f'アミン信号増減係数 (u1) - 層間のアミン信号増幅/減衰率(1より大きければ増幅)（デフォルト: {self.diffusion_rate}）')
         ed_group.add_argument('--sig', type=float, default=self.sigmoid_threshold,
                              metavar='FLOAT',
                              help=f'シグモイド閾値 (u0) - 活性化関数の感度（デフォルト: {self.sigmoid_threshold}）')
