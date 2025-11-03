@@ -1,7 +1,8 @@
-# ED-Multi SNN - スパイキングニューラルネットワークのための純粋ED法実装
+# ED法 - SNN(スパイキングニューラルネットワーク)の新しい学習法
 
 金子勇氏オリジナルError-Diffusion（ED）法をスパイキングニューラルネットワーク（SNN）に適用した実装です。<br>
 本実装では、**3つの異なるバージョン**を用意しています。
+
  1. ed_multi_lif_snn.py         100％のLIFニューロンで構成されるネットワーク
  2. ed_multi_lif_snn_simple.py  基本的な機能のみの実装にしたネットワーク
  3. ed_mulit_frelu_snn.py       活性化関数にFReLUを用いたネットワーク
