@@ -1,5 +1,7 @@
 # ED法 - SNN(スパイキングニューラルネットワーク)の新しい学習法
 
+[**日本語**](README.md) | [English](README_EN.md)
+
 金子勇氏オリジナルError-Diffusion（ED）法をスパイキングニューラルネットワーク（SNN）に適用した実装です。<br>
 本実装では、**3つの異なるバージョン**を用意しています。
 
@@ -295,6 +297,9 @@ cd ed_multi_snn
 # 依存関係インストール
 pip install numpy tensorflow matplotlib tqdm psutil cupy-cuda12x
 
+# 日本語コメント版のコードを使用（src/ja/）
+cd src/ja
+
 # LIF版実行（完全SNN）
 python ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10
 
@@ -304,6 +309,12 @@ python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10
 # FReLU版実行（FReLUの実験用実装）
 python ed_multi_frelu_snn.py --mnist --train 1000 --test 100 --epochs 10
 ```
+
+> **💡 言語選択**: 
+> - **日本語コメント版**: `src/ja/` ディレクトリを使用
+> - **English commented version**: Use `src/en/` directory ([English Guide](README_EN.md))
+
+詳細な使用方法は [USAGE.md](USAGE.md) をご覧ください。
 
 ## 主要なコマンドライン引数
 

@@ -1,0 +1,360 @@
+# ED-Multi SNN Publication Repository# ED-Multi SNN Publication Repository
+
+# This repository includes three main implementations and essential documentation# This repository includes three main implementations and essential documentation
+
+
+
+# Byte-compiled / optimized / DLL files# Byte-compiled / optimized / DLL files
+
+__pycache__/__pycache__/
+
+*.py[cod]*.py[cod]
+
+*$py.class*$py.class
+
+
+
+# C extensions# C extensions
+
+*.so*.so
+
+
+
+# Distribution / packaging# Distribution / packaging
+
+.Python.Python
+
+build/build/
+
+develop-eggs/develop-eggs/
+
+dist/dist/
+
+downloads/downloads/
+
+eggs/eggs/
+
+.eggs/.eggs/
+
+lib/lib/
+
+lib64/lib64/
+
+parts/parts/
+
+sdist/sdist/
+
+var/var/
+
+wheels/wheels/
+
+*.egg-info/*.egg-info/
+
+.installed.cfg.installed.cfg
+
+*.egg*.egg
+
+MANIFESTMANIFEST
+
+
+
+# PyInstaller# PyInstaller
+
+*.manifest*.manifest
+
+*.spec*.spec
+
+
+
+# Installer logs# Installer logs
+
+pip-log.txtpip-log.txt
+
+pip-delete-this-directory.txtpip-delete-this-directory.txt
+
+
+
+# Unit test / coverage reports# Unit test / coverage reports
+
+htmlcov/htmlcov/
+
+.tox/.tox/
+
+.nox/.nox/
+
+.coverage.coverage
+
+.coverage.*.coverage.*
+
+.cache.cache
+
+nosetests.xmlnosetests.xml
+
+coverage.xmlcoverage.xml
+
+*.cover*.cover
+
+.hypothesis/.hypothesis/
+
+.pytest_cache/.pytest_cache/
+
+
+
+# Translations# Translations
+
+*.mo*.mo
+
+*.pot*.pot
+
+
+
+# Django stuff:# Django stuff:
+
+*.log*.log
+
+local_settings.pylocal_settings.py
+
+db.sqlite3db.sqlite3
+
+
+
+# Flask stuff:# Flask stuff:
+
+instance/instance/
+
+.webassets-cache.webaskets-cache
+
+
+
+# Scrapy stuff:# Scrapy stuff:
+
+.scrapy.scrapy
+
+
+
+# Sphinx documentation# Sphinx documentation
+
+docs/_build/docs/_build/
+
+
+
+# PyBuilder# PyBuilder
+
+target/target/
+
+
+
+# Jupyter Notebook# Jupyter Notebook
+
+.ipynb_checkpoints.ipynb_checkpoints
+
+
+
+# IPython# IPython
+
+profile_default/profile_default/
+
+ipython_config.pyipython_config.py
+
+
+
+# pyenv# pyenv
+
+.python-version.python-version
+
+
+
+# celery beat schedule file# celery beat schedule file
+
+celerybeat-schedulecelerybeat-schedule
+
+
+
+# SageMath parsed files# SageMath parsed files
+
+*.sage.py*.sage.py
+
+
+
+# Environments# Environments
+
+.env.env
+
+.venv.venv
+
+env/env/
+
+venv/venv/
+
+ENV/ENV/
+
+env.bak/env.bak/
+
+venv.bak/venv.bak/
+
+
+
+# Spyder project settings# Spyder project settings
+
+.spyderproject.spyderproject
+
+.spyproject.spyproject
+
+
+
+# Rope project settings# Rope project settings
+
+.ropeproject.ropeproject
+
+
+
+# mkdocs documentation# mkdocs documentation
+
+/site/site
+
+
+
+# mypy# mypy
+
+.mypy_cache/.mypy_cache/
+
+.dmypy.json.dmypy.json
+
+dmypy.jsondmypy.json
+
+
+
+# Pyre type checker# Pyre type checker
+
+.pyre/.pyre/
+
+
+
+# VS Code settings# IDE関連の除外
+
+.vscode/.vscode/
+
+!.vscode/tasks.json.idea/
+
+!.vscode/launch.json*.swp
+
+!.vscode/extensions.json*.swo
+
+*~
+
+# PyCharm
+
+.idea/# OS関連の除外
+
+.DS_Store
+
+# System filesThumbs.db
+
+.DS_Store
+
+Thumbs.db# Development files and scripts
+
+*_backup*
+
+# Temporary filesbackup/
+
+*.tmp*.sh
+
+*.temprun_ed_main.sh
+
+*~run_ed_simple.sh
+
+
+
+# Backup files# Exclude shell script documentation
+
+*.bakUSAGE.md
+
+*_backup*
+
+backup/# Results and experiment data
+
+viz_results/
+
+# Log files
+
+*.log# Allow public visualization results for documentation
+
+!viz_results_for_public/
+
+# Output files
+
+output/# Exclude specific development txt/csv files but allow documentation
+
+results/!TECHNICAL_DOCS.md
+
+viz_results/!PERFORMANCE_REPORT.md
+
+!test_results/lif_snn_learning_test_results.md
+
+# Experimental and fast implementations (not for publication)!test_results/frelu_snn_learning_test_results.md
+
+*_fast.py
+
+*_fast_*.py# Allow specific documentation files
+
+modules/ed_learning/ed_core_fast.py!docs/ED法_解説資料.md
+
+modules/snn/snn_network_fast.py
+
+modules/snn/snn_network_fast_v2.py# Exclude large log files and experiment data
+
+*.log
+
+# Include only essential filesexperiment_*.txt
+
+# Main implementationsresults_*.csv
+
+# - ed_multi_lif_snn.py (Complete LIF SNN)output_*.csv
+
+# - ed_multi_lif_snn_simple.py (Educational version)data_*.npz
+
+# - ed_multi_frelu_snn.py (FReLU high-speed version)model_*.pkl
+
+# Documentation
+
+# - README.md, USAGE.md, TECHNICAL_DOCS.md# Exclude unused module directories and files
+
+# Essential modules onlymodules/data/
+
+# - modules/accuracy_loss_verifier.pymodules/ed_learning/
+
+# - modules/data_loader.pymodules/utils/
+
+# - modules/snn_heatmap_integration.pymodules/visualization/
+
+# - modules/snn/lif_neuron.pymodules/snn_heatmap_visualizer.py
+
+modules/snn/ed_core_fast_v2.py
+
+# Exclude development/experimental files that should not be publishedmodules/snn/snn_network.py
+
+ed_snn_v025.pymodules/snn/snn_network_fast.py
+
+ed_snn_mnist_published.pymodules/snn/snn_network_fast_v2.py
+
+
+
+# Exclude configuration and report files that should not be published# Include only essential files
+
+.gitignore# Main implementations
+
+PERFORMANCE_REPORT.md# - ed_multi_lif_snn.py (Complete LIF SNN)
+# - ed_multi_lif_snn_simple.py (Educational version)
+# - ed_multi_frelu_snn.py (FReLU high-speed version)
+# Documentation
+# - README.md, USAGE.md, TECHNICAL_DOCS.md, PERFORMANCE_REPORT.md
+# Essential modules only
+# - modules/accuracy_loss_verifier.py
+# - modules/data_loader.py
+# - modules/snn_heatmap_integration.py
+# - modules/snn/lif_neuron.py
+
+# Exclude development/experimental files that should not be published
+ed_snn_v025.py
+ed_snn_mnist_published.py

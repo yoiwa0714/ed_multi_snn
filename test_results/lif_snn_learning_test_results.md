@@ -727,6 +727,49 @@
    テスト正答率: 78.20%<br>
 
 
+## 18. python ed_multi_lif_snn.py --viz --heatmap --fashion --seed 42 --train 4096 --test 4096 --batch 128 --save_fig viz_results_for_public/lif_snn_fashion_hid4096_epo30 --hidden 4096,128,128 --epochs 30 --dif 2.0
+
+【ED法アルゴリズムパラメータ】
+  学習率 (alpha):         0.100
+  初期アミン濃度 (beta):  0.250
+  アミン拡散係数 (u1):    2.000
+  シグモイド閾値 (u0):    1.200
+  重み初期値1:            0.300
+  重み初期値2:            0.500
+
+【LIFニューロンパラメータ】
+  静止膜電位 (v_rest):    -65.0 mV
+  発火閾値 (v_threshold): -60.0 mV
+  リセット電位 (v_reset): -70.0 mV
+  膜時定数 (tau_m):       20.0 ms
+  不応期 (tau_ref):       2.0 ms
+  時間ステップ (dt):      1.0 ms
+  膜抵抗 (R_m):           10.0 MΩ
+  シミュレーション時間:   50.0 ms
+  LIF層使用:              有効 (全層LIF化)
+    - 入力層:             LIF + スパイク符号化
+    - 隠れ層・出力層:     LIF活性化関数
+  スパイク符号化方式:     poisson
+  スパイク最大発火率:     100.0 Hz
+  スパイクシミュレーション時間: 50.0 ms
+  スパイク時間ステップ:   1.0 ms
+
+【実行時設定パラメータ】
+  データセット:           Fashion-MNIST
+  訓練データ数:           4096
+  テストデータ数:         4096
+  エポック数:             30
+  隠れ層構造:             4096,128,128 (多層)
+  ミニバッチサイズ:       128 (ミニバッチ)
+  ランダムシード:         42
+  データシャッフル:       ON
+  リアルタイム可視化:     ON
+  詳細表示:               OFF
+  図表保存:               ON -> viz_results_for_public/lif_snn_fashion_hid4096_epo30
+
+
+<img src="" alt="">
+
 
 
 
