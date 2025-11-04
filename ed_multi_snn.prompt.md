@@ -99,6 +99,76 @@ SNNの基本原理はプロジェクトディレクトリのdocs/SNN_from_scratc
 - **ネットワーク**: SNNで構築
 - **理論保持**: ED法の学習アルゴリズムに「微分の連鎖律を用いた誤差逆伝播法」の使用禁止を保持
 
+### 11. 多重スパイクエンコーディング機能
+- **オリジナル仕様**: オリジナル実装無し
+- **拡張機能**: 複数のスパイク符号化方式による入力変換システム
+- **実装機能**: ポアソン符号化、レート符号化、時間符号化、集団符号化
+- **技術的特徴**: 
+  - `_poisson_encode`: ポアソン分布によるスパイク列生成
+  - `_rate_encode`: 強度をスパイク発火率に変換
+  - `_temporal_encode`: 時間的発火パターン符号化
+  - `_spike_encode`: 複合スパイクパターン生成
+- **使用方法**: `encoding_type`パラメータで符号化方式選択
+
+### 12. LIFニューロン統合システム
+- **オリジナル仕様**: オリジナル実装無し
+- **拡張機能**: 完全なLeaky Integrate-and-Fire (LIF) ニューロンモデル統合
+- **実装機能**: 
+  - `LIFNeuron`クラス: 個別LIFニューロン実装
+  - `LIFNeuronLayer`クラス: 層単位のLIF管理
+  - アミン濃度管理: `set_amine_concentration`, `get_amine_concentration`
+  - 膜電位動力学: 微分方程式による膜電位更新
+- **技術的特徴**: 生物学的に妥当なスパイク生成メカニズム
+- **パラメータ**: 静止電位、閾値、リセット電位、時定数制御
+
+### 13. スパイク-ED変換インターフェース
+- **オリジナル仕様**: オリジナル実装無し
+- **拡張機能**: スパイク活動とED法入力の双方向変換システム
+- **実装機能**:
+  - `convert_ed_outputs_to_spike_activities`: ED出力をスパイク活動パターンに変換
+  - `convert_to_lif_input`: 画像データをLIF入力電流に変換（v019 Phase 11準拠）
+  - `convert_spikes_to_ed_input`: スパイクパターンをED法入力形式に変換
+- **技術的特徴**: 興奮性・抑制性ペア構造の完全保持
+- **使用方法**: ED法とSNNの無縫接続による統合学習
+
+### 14. 高速化SNNネットワーク実装
+- **オリジナル仕様**: オリジナル実装無し
+- **拡張機能**: 大規模SNN計算の高速化システム
+- **実装機能**:
+  - `SNNNetworkFastV2`クラス: 高速化SNN実装
+  - `encode_input_fast`: 高速入力エンコーディング
+  - `simulate_snn_fast`: 効率的SNN動力学シミュレーション
+- **技術的特徴**: 計算ステップ削減とベクトル化処理
+- **性能向上**: 従来SNN実装比で大幅な高速化達成
+
+### 15. 純粋ED前処理システム
+- **オリジナル仕様**: オリジナル実装無し
+- **拡張機能**: ED法理論に完全準拠した前処理クラス
+- **実装機能**: `PureEDPreprocessor`によるデータ前処理統合
+- **技術的特徴**: 興奮性・抑制性ペア化、Dale's Principle適用
+- **理論準拠**: 金子勇氏の原理論との完全整合性保証
+
+### 16. 統合可視化システム拡張
+- **オリジナル仕様**: 基本的な可視化のみ
+- **拡張機能**: SNN学習過程の包括的リアルタイム可視化
+- **実装機能**:
+  - `RealtimeLearningVisualizer`: リアルタイム学習可視化
+  - `setup_japanese_font`: 日本語フォント自動設定
+  - `wait_for_keypress_or_timeout`: インタラクティブ制御
+- **技術的特徴**: スパイク活動、膜電位、学習進捗の統合表示
+- **使用方法**: SNN特有の動力学可視化とED法学習監視
+
+### 17. モジュール化アーキテクチャ
+- **オリジナル仕様**: 単一ファイル実装
+- **拡張機能**: 機能別モジュール分離による保守性向上
+- **実装構造**:
+  - `modules/snn/`: SNNコア機能
+  - `modules/ed_learning/`: ED法学習エンジン
+  - `modules/visualization/`: 可視化システム
+  - `modules/utils/`: 共通ユーティリティ
+- **技術的特徴**: 疎結合設計による拡張性確保
+- **保守性**: 機能追加・修正の独立性向上
+
 ## ED法核心理論（オリジナル仕様完全保持）
 
 以下は金子勇氏によるオリジナルED法理論であり、拡張版においても100%保持されています：
@@ -903,6 +973,288 @@ in:0.00 0.00 1.00 1.00 -> 0.00576, 0.00  # 誤差減少
 
 **ED法 for SNNでは、ED法オリジナル理論の本質を100%保持しながら、SNNネットワークでもED法が有効に機能する実装を目指します。**
 
+## SNN統合実装詳細（拡張機能）
+
+### 1. スパイクエンコーディング実装仕様
+
+#### 1.1 ポアソン符号化 (`_poisson_encode`)
+```python
+def _poisson_encode(self, input_data, time_steps=100, dt=1.0):
+    """
+    ポアソン分布によるスパイク列生成
+    
+    Parameters:
+    -----------
+    input_data : array
+        正規化入力データ (0-1)
+    time_steps : int
+        時間ステップ数
+    dt : float
+        時間刻み [ms]
+    
+    Returns:
+    --------
+    spike_trains : array
+        スパイク列 (time_steps, neurons)
+    """
+```
+
+#### 1.2 レート符号化 (`_rate_encode`)
+```python
+def _rate_encode(self, input_data, max_rate=100.0):
+    """
+    入力強度をスパイク発火率に変換
+    
+    Parameters:
+    -----------
+    input_data : array
+        入力データ
+    max_rate : float
+        最大発火率 [Hz]
+    
+    Returns:
+    --------
+    firing_rates : array
+        発火率パターン
+    """
+```
+
+#### 1.3 時間符号化 (`_temporal_encode`)
+```python
+def _temporal_encode(self, input_data, time_window=50.0):
+    """
+    時間的発火パターン符号化
+    
+    Parameters:
+    -----------
+    input_data : array
+        入力データ
+    time_window : float
+        時間窓 [ms]
+    
+    Returns:
+    --------
+    temporal_pattern : array
+        時間的スパイクパターン
+    """
+```
+
+### 2. LIFニューロン実装仕様
+
+#### 2.1 LIFニューロンクラス
+```python
+class LIFNeuron:
+    """
+    Leaky Integrate-and-Fire ニューロンモデル
+    
+    Parameters:
+    -----------
+    v_rest : float
+        静止膜電位 [mV]
+    v_threshold : float
+        発火閾値 [mV]
+    v_reset : float
+        リセット電位 [mV]
+    tau_m : float
+        膜時定数 [ms]
+    tau_ref : float
+        不応期 [ms]
+    r_m : float
+        膜抵抗 [MΩ]
+    neuron_type : str
+        ニューロンタイプ ('excitatory' or 'inhibitory')
+    """
+    
+    def update(self, input_current, dt=1.0):
+        """
+        膜電位更新とスパイク判定
+        
+        Parameters:
+        -----------
+        input_current : float
+            入力電流 [nA]
+        dt : float
+            時間刻み [ms]
+        
+        Returns:
+        --------
+        spike : bool
+            スパイク発生フラグ
+        """
+```
+
+#### 2.2 アミン濃度管理
+```python
+def set_amine_concentration(self, concentration):
+    """
+    アミン濃度設定（ED法統合用）
+    
+    Parameters:
+    -----------
+    concentration : float
+        アミン濃度値
+    """
+
+def get_amine_concentration(self):
+    """
+    現在のアミン濃度取得
+    
+    Returns:
+    --------
+    concentration : float
+        現在のアミン濃度
+    """
+```
+
+### 3. スパイク-ED変換インターフェース
+
+#### 3.1 ED出力→スパイク活動変換
+```python
+def convert_ed_outputs_to_spike_activities(ed_core, inputs, original_image_shape=(28, 28)):
+    """
+    ED出力をスパイク活動パターンに変換（ヒートマップ用）
+    
+    Parameters:
+    -----------
+    ed_core : MultiLayerEDCore
+        ED Core インスタンス
+    inputs : array
+        E/Iペア化された入力 (shape: [paired_input_size])
+    original_image_shape : tuple
+        元の画像形状 ((28, 28), (32, 32, 3)など)
+    
+    Returns:
+    --------
+    spike_activities : list
+        各層のスパイク活動パターン
+    """
+```
+
+#### 3.2 画像データ→LIF入力変換
+```python
+def convert_to_lif_input(image_data, scale_factor=10.0):
+    """
+    画像データをLIF入力電流に変換（v019 Phase 11修正）
+    
+    Parameters:
+    -----------
+    image_data : array
+        正規化済み画像データ (0-1)
+        784個（MNIST）または1568個（既にE/Iペア化済み）
+    scale_factor : float
+        電流スケールファクター（デフォルト: 10.0 nA）
+        
+    Returns:
+    --------
+    current_pattern : array
+        電流パターン (nA単位)
+        **Phase 11**: 1568個（興奮性784個+抑制性784個）
+        
+    Note:
+    -----
+    v019 Phase 11修正: ED法仕様に完全準拠
+    - 金子勇氏のオリジナルED法では入力層は興奮性・抑制性ペア構成が必須
+    - 物理的に1568個のニューロン（興奮性784個+抑制性784個）で構成
+    - 入力が784個の場合: 1568個に変換
+    - 入力が1568個の場合: そのまま処理（既にペア化済み）
+    """
+```
+
+### 4. 高速化SNN実装
+
+#### 4.1 高速化SNNネットワーク
+```python
+class SNNNetworkFastV2:
+    """
+    高速化ED-SNNネットワーク実装
+    
+    Parameters:
+    -----------
+    network_structure : list
+        [入力, 隠れ, 出力] のリスト
+    simulation_time : float
+        シミュレーション時間 (ms)
+    dt : float
+        時間刻み (ms)
+    use_fast_core : bool
+        高速化EDコア使用フラグ
+    """
+    
+    def encode_input_fast(self, input_data, encoding_type='rate'):
+        """高速入力エンコーディング"""
+        
+    def simulate_snn_fast(self, encoded_input):
+        """高速SNNシミュレーション"""
+```
+
+### 5. 統合学習アルゴリズム
+
+#### 5.1 ED-SNN統合学習ステップ
+```python
+def train_step(self, input_data, target_data, encoding_type='rate'):
+    """
+    ED-SNN統合学習ステップ
+    
+    Process:
+    --------
+    1. 入力をスパイク列にエンコード
+    2. SNNダイナミクスシミュレーション
+    3. スパイクパターンをED法入力に変換
+    4. ED法学習実行
+    
+    Parameters:
+    -----------
+    input_data : array
+        入力データ
+    target_data : array  
+        目標データ
+    encoding_type : str
+        エンコーディングタイプ
+        
+    Returns:
+    --------
+    result : dict
+        学習結果情報
+    """
+```
+
+### 6. モジュール構成
+
+#### 6.1 modules/snn/ ディレクトリ
+```
+modules/snn/
+├── __init__.py
+├── lif_neuron.py          # LIFニューロン実装
+├── snn_network.py         # 基本SNNネットワーク
+├── snn_network_fast.py    # 高速化SNN
+├── snn_network_fast_v2.py # 最適化SNN
+└── ed_core_fast_v2.py     # ED-SNN統合コア
+```
+
+#### 6.2 統合アーキテクチャ
+```
+MultiLayerEDCore (メインクラス)
+├── SNNNetwork統合
+├── スパイクエンコーダー
+├── LIFニューロン層
+├── ED法学習エンジン
+└── 可視化インターフェース
+```
+
+### 7. 理論的整合性保証
+
+#### 7.1 ED法理論との統合
+- **興奮性・抑制性ペア構造**: SNNでも完全保持
+- **Dale's Principle**: LIFニューロンレベルで適用
+- **アミン拡散**: スパイク発火率としてアミン濃度をモデル化
+- **独立出力ニューロン**: 各クラス専用のSNNサブネットワーク
+
+#### 7.2 生物学的妥当性
+- **スパイク発火**: 実際の神経細胞の動力学
+- **膜電位動力学**: 微分方程式による正確なモデル化
+- **時間的ダイナミクス**: リアルタイム情報処理
+- **可塑性**: スパイクタイミング依存性を保持
+
 ## 実装方針（拡張版対応）
 
  **ED法理論の絶対保持**: 金子勇氏のオリジナル理論は一切変更せず、拡張機能は理論に準拠した形で追加する。
@@ -921,5 +1273,6 @@ in:0.00 0.00 1.00 1.00 -> 0.00576, 0.00  # 誤差減少
 **本仕様書は、オリジナルC実装の動作確認と詳細なコード解析、および拡張機能の実装検証に基づいて作成されました。**  
 **オリジナル検証日**: 2025年8月30日  
 **拡張版作成日**: 2025年9月13日  
+**SNN統合実装**: 2025年11月  
 **検証者**: AI解析システム  
-**ソースコード**: `/ed_original_src/` (コンパイル・実行確認済み) + 拡張版Python実装
+**ソースコード**: `/ed_original_src/` (コンパイル・実行確認済み) + 拡張版Python実装 + SNN統合実装
