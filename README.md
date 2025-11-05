@@ -12,7 +12,7 @@
 ## ED法の詳細
 
 ED法(Error-Diffusion法)とは、故金子勇氏が1999年に考案された、「微分の連鎖律を用いた誤差逆伝播法」を用いない生物学的に妥当な多層ニューラルネットワークの学習方法です。<br>
-ED法の詳細については、[ED法_解説資料.md](docs/ED法_解説資料.md)をご覧ください。
+ED法の詳細については、[ED法_解説資料.md](docs/ja/ED法_解説資料.md)をご覧ください。
 
 ## ED法の技術的メリット
 
@@ -151,34 +151,36 @@ python ed_multi_frelu_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --
 ```text
 ed_multi_snn/
 ├── README.md                      # このファイル
-├── TECHNICAL_DOCS.md              # 技術ドキュメント（実装詳細）
-├── PERFORMANCE_REPORT.md          # パフォーマンス分析レポート
-├── USAGE.md                       # 使用方法詳細
-│
-├── test_results/                  # 学習結果レポート
-│   ├── lif_snn_learning_test_results.md    # LIF版学習結果
-│   └── frelu_snn_learning_test_results.md  # FReLU版学習結果
-│
+├── README_EN.md                   # 英語版README
 ├── docs/                          # ドキュメント
-│   └── ED法_解説資料.md           # ED法理論解説
+│   ├── ja/                        # 日本語ドキュメント
+│   │   ├── ed_multi_snn.prompt.md # ED法実装仕様書
+│   │   ├── ED法_解説資料.md       # ED法理論解説
+│   │   ├── USAGE.md               # 使用方法詳細
+│   │   ├── EDLA_金子勇氏.md       # 金子勇氏の功績
+│   │   └── PROJECT_OVERVIEW.md    # プロジェクト概要
+│   └── en/                        # English Documentation
+│       ├── ed_multi_snn.prompt_EN.md
+│       ├── ED_Method_Explanation.md
+│       ├── USAGE_EN.md
+│       ├── EDLA_Isamu_Kaneko.md
+│       └── PROJECT_OVERVIEW.md
 │
-├── 🧠 LIF版（完全SNN）
-│   └── ed_multi_lif_snn.py        # メインプログラム
+├── src/                           # ソースコード
+│   ├── ja/                        # 日本語コメント版
+│   │   ├── ed_multi_lif_snn.py        # LIF版メインプログラム
+│   │   ├── ed_multi_lif_snn_simple.py # Simple版
+│   │   ├── ed_multi_frelu_snn.py      # FReLU版
+│   │   └── modules/               # 必要最小限のモジュール群
+│   └── en/                        # English commented version
+│       ├── ed_multi_lif_snn.py
+│       ├── ed_multi_lif_snn_simple.py
+│       ├── ed_multi_frelu_snn.py
+│       └── modules/
 │
-├── 📚 Simple版（実装学習用）
-│   └── ed_multi_lif_snn_simple.py # 学習用サンプル版
-│
-├── 🚀 FReLU版（FReLU試験用）
-│   └── ed_multi_frelu_snn.py      # FReLU試験的実装版
-│
-└── modules/                       # 必要最小限のモジュール群
-    ├── __init__.py
-    ├── data_loader.py             # データローダー  
-    ├── accuracy_loss_verifier.py  # 正答率・誤差検証
-    ├── snn_heatmap_integration.py # ヒートマップ統合機能
-    └── snn/                       # SNNモジュール（必要最小限）
-        ├── __init__.py
-        └── lif_neuron.py          # LIFニューロン実装
+└── test_results/                  # 学習結果レポート
+    ├── lif_snn_learning_test_results.md    # LIF版学習結果
+    └── frelu_snn_learning_test_results.md  # FReLU版学習結果
 ```
 
 ## 基本的な使い方
@@ -188,25 +190,25 @@ ed_multi_snn/
 #### MNIST学習 (--mnistを指定)
 
 ```bash
-python ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10
+python src/ja/ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10
 ```
 
 #### Fashion-MNIST学習 (--fashionを指定)
 
 ```bash
-python ed_multi_lif_snn.py --fashion --train 1000 --test 100 --epochs 10
+python src/ja/ed_multi_lif_snn.py --fashion --train 1000 --test 100 --epochs 10
 ```
 
 #### 多層構造での学習 (--hiddenで層数とニューロン数を指定)
 
 ```bash
-python ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10 --hidden 256,128,64
+python src/ja/ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10 --hidden 256,128,64
 ```
 
 #### リアルタイム可視化付き (--vizや --heatmapを指定)
 
 ```bash
-python ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10 --viz --heatmap
+python src/ja/ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10 --viz --heatmap
 ```
 
 ### 📚 Simple版（実装学習用）(コード内容を確認して実装方法を学習することが主目的)
@@ -214,13 +216,13 @@ python ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10 --viz --h
 #### 基本的な学習
 
 ```bash
-python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10
+python src/ja/ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10
 ```
 
 #### 詳細ログ付き学習
 
 ```bash
-python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10 --verbose
+python src/ja/ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10 --verbose
 ```
 
 ### 🚀 FReLU版（FReLUの試験的実装）
@@ -228,13 +230,13 @@ python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10 --
 #### MNIST学習
 
 ```bash
-python ed_multi_frelu_snn.py --mnist --train 5000 --test 1000 --epochs 20
+python src/ja/ed_multi_frelu_snn.py --mnist --train 5000 --test 1000 --epochs 20
 ```
 
 #### Fashion-MNIST学習
 
 ```bash
-python ed_multi_frelu_snn.py --fashion --train 10000 --test 2000 --epochs 30 --hidden 512,256,128
+python src/ja/ed_multi_frelu_snn.py --fashion --train 10000 --test 2000 --epochs 30 --hidden 512,256,128
 ```
 
 ### 🛠️ 共通オプション
@@ -243,19 +245,19 @@ python ed_multi_frelu_snn.py --fashion --train 10000 --test 2000 --epochs 30 --h
 
 ```bash
 # GPU自動検出・使用（CuPyインストール時）
-python [ファイル名] --mnist --train 1000 --test 100 --epochs 10
+python src/ja/[ファイル名] --mnist --train 1000 --test 100 --epochs 10
 ```
 
 #### 図表保存付き学習 (--save_figの後に保存先ディレクトリを指定します。ディレクトリが指定されていない場合にはviz_resultsディレクトリ下に保存します。ディレクトリが存在しない場合には作成します。)
 
 ```bash
-python [ファイル名] --mnist --train 1000 --test 100 --epochs 10 --viz --heatmap --save_fig results/
+python src/ja/[ファイル名] --mnist --train 1000 --test 100 --epochs 10 --viz --heatmap --save_fig results/
 ```
 
 #### バッチサイズ調整
 
 ```bash
-python [ファイル名] --mnist --train 1000 --test 100 --epochs 10 --batch_size 256
+python src/ja/[ファイル名] --mnist --train 1000 --test 100 --epochs 10 --batch_size 256
 ```
 
 ## 必要条件・インストール
@@ -298,23 +300,22 @@ cd ed_multi_snn
 pip install numpy tensorflow matplotlib tqdm psutil cupy-cuda12x
 
 # 日本語コメント版のコードを使用（src/ja/）
-cd src/ja
 
 # LIF版実行（完全SNN）
-python ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10
+python src/ja/ed_multi_lif_snn.py --mnist --train 1000 --test 100 --epochs 10
 
 # Simple版実行（学習用）
-python ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10
+python src/ja/ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epochs 10
 
 # FReLU版実行（FReLUの実験用実装）
-python ed_multi_frelu_snn.py --mnist --train 1000 --test 100 --epochs 10
+python src/ja/ed_multi_frelu_snn.py --mnist --train 1000 --test 100 --epochs 10
 ```
 
 > **💡 言語選択**: 
 > - **日本語コメント版**: `src/ja/` ディレクトリを使用
 > - **English commented version**: Use `src/en/` directory ([English Guide](README_EN.md))
 
-詳細な使用方法は [USAGE.md](USAGE.md) をご覧ください。
+詳細な使用方法は [USAGE.md](docs/ja/USAGE.md) をご覧ください。
 
 ## 主要なコマンドライン引数
 
@@ -524,9 +525,10 @@ Public Release Version (2025-10-31)
 
 ## 関連ドキュメント
 
-- 📖 [TECHNICAL_DOCS.md](TECHNICAL_DOCS.md) - 技術詳細とアルゴリズム解説
-- 📊 [PERFORMANCE_REPORT.md](PERFORMANCE_REPORT.md) - 性能ベンチマークと実験結果
-- 🎓 [README_simple.md](README_simple.md) - Simple版の詳細説明
+- 📖 [技術仕様書](docs/ja/ed_multi_snn.prompt.md) - ED法実装仕様とアルゴリズム解説
+- � [ED法_解説資料](docs/ja/ED法_解説資料.md) - ED法理論の詳細解説
+- 🎓 [USAGE](docs/ja/USAGE.md) - 詳細な使用方法ガイド
+- 👨‍💻 [金子勇氏について](docs/ja/EDLA_金子勇氏.md) - ED法開発者の功績
 
 ---
 

@@ -2,17 +2,24 @@
 
 [日本語](README.md) | **English**
 
-Implementation of Isamu Kaneko's original Error-Diffusion (ED) method applied to Spiking Neural Networks (SNN).<br>
+> **🌟 Navigate this repository**:
+>
+> - **Source Code**: [`src/en/`](src/en/) (English) | [`src/ja/`](src/ja/) (Japanese)
+> - **Documentation**: [`docs/en/`](docs/en/) (English) | [`docs/ja/`](docs/ja/) (Japanese)
+> - **Quick Start**: [`docs/en/USAGE_EN.md`](docs/en/USAGE_EN.md)
+
+Implementation of Isamu Kaneko's original Error-Diffusion (ED) method applied to Spiking Neural Networks (SNN).
+
 This implementation provides **three different versions**:
 
-1. ed_multi_lif_snn.py         - Network composed of 100% LIF neurons
-2. ed_multi_lif_snn_simple.py  - Basic functionality implementation
-3. ed_multi_frelu_snn.py       - Network using FReLU activation function
+1. [`ed_multi_lif_snn.py`](src/en/ed_multi_lif_snn.py) - Network composed of 100% LIF neurons
+2. [`ed_multi_lif_snn_simple.py`](src/en/ed_multi_lif_snn_simple.py) - Basic functionality implementation  
+3. [`ed_multi_frelu_snn.py`](src/en/ed_multi_frelu_snn.py) - Network using FReLU activation function
 
 ## About the ED Method
 
-The Error-Diffusion (ED) method is a biologically plausible multi-layer neural network learning algorithm conceived by the late Isamu Kaneko in 1999, which does not use "error backpropagation with chain rule of differentiation".<br>
-For detailed information about the ED method, please refer to [ED Method Overview](docs/en/ED_Method_Overview.md).
+The Error-Diffusion (ED) method is a biologically plausible multi-layer neural network learning algorithm conceived by the late Isamu Kaneko in 1999, which does not use "error backpropagation with chain rule of differentiation".
+For detailed information about the ED method, please refer to [ED Method Explanation](docs/en/ED_Method_Explanation.md).
 
 ## Technical Advantages of the ED Method
 
@@ -34,7 +41,7 @@ Since the chain rule of differentiation is not used, **vanishing gradient proble
 
 ## Overview
 
-This implementation achieves image classification on MNIST and Fashion-MNIST datasets using Isamu Kaneko's biologically plausible "ED method" learning algorithm, without using the biologically less plausible "error backpropagation with chain rule of differentiation".<br>
+This implementation achieves image classification on MNIST and Fashion-MNIST datasets using Isamu Kaneko's biologically plausible "ED method" learning algorithm, without using the biologically less plausible "error backpropagation with chain rule of differentiation".
 This implementation is based on a complete spiking neural network where all neurons are LIF neurons.
 
 ## Learning Results with ed_multi_lif_snn.py
@@ -50,7 +57,7 @@ Examples of learning results using ed_multi_lif_snn.py on MNIST and Fashion-MNIS
 ・Execution Command
 
 ```bash
-python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_mnist_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+python src/en/ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_mnist_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
 ```
 
 ### Fashion-MNIST Dataset Learning Example
@@ -62,7 +69,7 @@ python ed_multi_lif_snn.py --mnist --train 1000 --test 500 --spike_max_rate 150 
 ・Execution Command
 
 ```bash
-python ed_multi_lif_snn.py --fashion --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_fashion_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
+python src/en/ed_multi_lif_snn.py --fashion --train 1000 --test 500 --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0 --viz --heatmap --save_fig viz_results_for_public/lif_fashion_256_lr0.15_e20 --epochs 20 --hidden 256 --lr 0.15
 ```
 
 ## Learning Results with ed_multi_frelu_snn.py
@@ -79,7 +86,7 @@ Examples of learning results using ed_multi_frelu_snn.py on Fashion-MNIST datase
 ・Execution Command
 
 ```bash
-python ed_multi_frelu_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/frelu_snn_fashion_hid2048_128_dif1.5_epo20 --hidden 2048,128 --epochs 20 --dif 1.5
+python src/en/ed_multi_frelu_snn.py --viz --heatmap --fashion --seed 42 --train 2048 --test 2048 --batch 128 --save_fig viz_results_for_public/frelu_snn_fashion_hid2048_128_dif1.5_epo20 --hidden 2048,128 --epochs 20 --dif 1.5
 ```
 
 ## Experimental Results (Reference)
@@ -136,13 +143,13 @@ cd ed_multi_snn
 cd src/en
 
 # Simple MNIST training
-python ed_multi_lif_snn.py --mnist --epochs 10
+python src/en/ed_multi_lif_snn.py --mnist --epochs 10
 
 # Fashion-MNIST with visualization
-python ed_multi_lif_snn.py --fashion --viz --heatmap --epochs 20
+python src/en/ed_multi_lif_snn.py --fashion --viz --heatmap --epochs 20
 
 # Multi-layer network with custom parameters
-python ed_multi_lif_snn.py --mnist --hidden 512,256,128 --lr 0.1 --epochs 30
+python src/en/ed_multi_lif_snn.py --mnist --hidden 512,256,128 --lr 0.1 --epochs 30
 ```
 
 > **💡 Language Selection**: 
@@ -154,17 +161,17 @@ For detailed usage instructions, see [USAGE_EN.md](docs/en/USAGE_EN.md).
 ### Advanced Usage
 ```bash
 # Full feature training with visualization
-python ed_multi_lif_snn.py \\
-    --fashion \\                    # Use Fashion-MNIST dataset
-    --train 2000 --test 1000 \\     # Dataset size
-    --hidden 1024,512,256 \\        # Multi-layer architecture
-    --epochs 50 \\                  # Training epochs
-    --batch 64 \\                   # Batch size
-    --lr 0.15 \\                    # Learning rate
-    --dif 1.2 \\                    # Amine diffusion rate
-    --spike_max_rate 100 \\         # Maximum spike rate
-    --spike_sim_time 50 \\          # Simulation time
-    --viz --heatmap \\              # Enable visualizations
+python src/en/ed_multi_lif_snn.py \
+    --fashion \                    # Use Fashion-MNIST dataset
+    --train 2000 --test 1000 \     # Dataset size
+    --hidden 1024,512,256 \        # Multi-layer architecture
+    --epochs 50 \                  # Training epochs
+    --batch 64 \                   # Batch size
+    --lr 0.15 \                    # Learning rate
+    --dif 1.2 \                    # Amine diffusion rate
+    --spike_max_rate 100 \         # Maximum spike rate
+    --spike_sim_time 50 \          # Simulation time
+    --viz --heatmap \              # Enable visualizations
     --save_fig results/experiment   # Save results
 ```
 
@@ -173,31 +180,68 @@ python ed_multi_lif_snn.py \\
 ### 📚 Core Documentation
 - 🇺🇸 [English Technical Documentation](docs/en/)
 - 🇯🇵 [Japanese Technical Documentation](docs/ja/)
-- 📖 [Complete Specification](ed_multi_snn.prompt_EN.md)
-- 🔬 [ED Method Overview](docs/en/ED_Method_Overview.md)
+- 📖 [Complete Specification](docs/en/ed_multi_snn.prompt_EN.md)
+- 🔬 [ED Method Explanation](docs/en/ED_Method_Explanation.md)
 
 ### 🛠️ Development
-- 🏗️ [Project Structure](docs/en/Project_Structure.md)
-- 🔧 [Module Reference](docs/en/Module_Reference.md)
-- 🧪 [Testing Guide](docs/en/Testing_Guide.md)
-- 📊 [Performance Analysis](docs/en/Performance_Analysis.md)
+- 🏗️ [Project Overview](docs/en/PROJECT_OVERVIEW.md)
+- 🔧 [Usage Guide](docs/en/USAGE_EN.md)
+- 🧪 [ED Method History](docs/en/EDLA_Isamu_Kaneko.md)
 
 ## Project Structure
 
 ```
 ed_multi_snn/
-├── README.md                    # Japanese main page
-├── README_EN.md                 # English main page
-├── ed_multi_snn.prompt.md       # Japanese specification
-├── ed_multi_snn.prompt_EN.md    # English specification
-├── docs/                        # Documentation
-│   ├── ja/                      # Japanese documents
-│   └── en/                      # English documents
-├── modules/                     # Core modules
-│   ├── snn/                     # SNN implementation
-│   ├── ed_learning/             # ED method core
-│   ├── visualization/           # Visualization tools
-│   └── utils/                   # Utilities
+├── 📄 README.md                    # Japanese main page (日本語メイン)
+├── 📄 README_EN.md                 # English main page (this file)
+├── 📁 src/                         # Source code (ソースコード)
+│   ├── 📁 ja/                      # Japanese commented code
+│   │   ├── 🐍 ed_multi_lif_snn.py         # Complete LIF version
+│   │   ├── 🐍 ed_multi_lif_snn_simple.py  # Simple version
+│   │   ├── 🐍 ed_multi_frelu_snn.py       # FReLU version
+│   │   └── 📁 modules/                     # Core modules
+│   └── 📁 en/                      # English commented code
+│       ├── 🐍 ed_multi_lif_snn.py         # Complete LIF version
+│       ├── 🐍 ed_multi_lif_snn_simple.py  # Simple version
+│       ├── 🐍 ed_multi_frelu_snn.py       # FReLU version
+│       └── 📁 modules/                     # Core modules
+├── 📁 docs/                        # Documentation
+│   ├── 📁 ja/                      # Japanese documentation
+│   │   ├── 📄 ed_multi_snn.prompt.md      # Technical specification
+│   │   ├── 📄 USAGE.md                    # Usage guide
+│   │   ├── 📄 ED法_解説資料.md             # ED method theory
+│   │   ├── 📄 EDLA_金子勇氏.md             # Kaneko's original paper
+│   │   ├── 📄 PROJECT_OVERVIEW.md         # Project overview
+│   │   └── 🖼️ fig1-4.gif                  # Reference figures
+│   └── 📁 en/                      # English documentation
+│       ├── 📄 ed_multi_snn.prompt_EN.md   # Technical specification
+│       ├── 📄 USAGE_EN.md                 # Usage guide
+│       ├── 📄 ED_Method_Explanation.md    # ED method theory
+│       ├── 📄 EDLA_Isamu_Kaneko.md        # Kaneko's original paper
+│       ├── 📄 PROJECT_OVERVIEW.md         # Project overview
+│       └── 🖼️ fig1-4.gif                  # Reference figures
+├── 📁 backup/                      # Historical backup files
+├── 📁 test_results/                # Learning trial records
+├── 📁 viz_results/                 # Visualization results
+└── 📁 viz_results_for_public/      # Public visualization results
+```
+
+### 🎯 Key Files for Getting Started
+
+| File | Purpose | Language |
+|------|---------|----------|
+| [`src/en/ed_multi_lif_snn.py`](src/en/ed_multi_lif_snn.py) | Complete LIF-SNN implementation | English |
+| [`src/ja/ed_multi_lif_snn.py`](src/ja/ed_multi_lif_snn.py) | Complete LIF-SNN implementation | Japanese |
+| [`docs/en/USAGE_EN.md`](docs/en/USAGE_EN.md) | Comprehensive usage guide | English |
+| [`docs/en/ed_multi_snn.prompt_EN.md`](docs/en/ed_multi_snn.prompt_EN.md) | Technical specification | English |
+
+### 📊 Repository Statistics
+
+- **Languages**: Python (primary), Markdown (documentation)
+- **Total Files**: 100+ source files, comprehensive documentation
+- **Code Quality**: Modular architecture, extensive commenting
+- **Testing**: Experimental results with detailed analysis
+- **Visualization**: Real-time learning curves and heatmaps
 ├── scripts/                     # Execution scripts
 ├── test_results/                # Experimental results
 └── viz_results_for_public/      # Public visualization results
@@ -225,11 +269,11 @@ In the era of Transformers and large language models, the ED method offers:
 
 ## Contributing
 
-We welcome contributions to this project! Please see our [Contributing Guide](docs/en/Contributing.md) for details on:
-- Code style and conventions
-- Testing requirements
-- Documentation standards
-- Pull request process
+We welcome contributions to this project! Please feel free to:
+- Open issues for bugs or feature requests
+- Submit pull requests with improvements
+- Provide feedback on documentation
+- Share your experimental results
 
 ## License
 
