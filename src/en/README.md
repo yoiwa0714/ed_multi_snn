@@ -27,7 +27,6 @@ python ed_multi_lif_snn.py --mnist --hidden 512,256,128 --epochs 30 --viz
 
 ## Detailed Information
 
-- Detailed usage: [../../docs/en/USAGE_EN.md](../../docs/en/USAGE_EN.md)
 - Technical specification: [../../docs/en/](../../docs/en/)
 - Project overview: [../../README_EN.md](../../README_EN.md)
 

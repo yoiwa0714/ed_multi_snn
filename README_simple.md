@@ -149,7 +149,6 @@ def poisson_encoding(self, input_data, max_rate, sim_time, dt):
 
 - 📖 [メインREADME](README.md) - プロジェクト全体の概要
 - 🔬 [ED法解説](docs/ja/ED法_解説資料.md) - ED法の理論詳細
-- 📋 [使用方法](docs/ja/USAGE.md) - 詳細な使用ガイド
 - 🧠 [技術詳細](TECHNICAL_DOCS.md) - 実装の技術解説
 
 ## 🎓 学習の進め方

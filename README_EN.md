@@ -6,7 +6,6 @@
 >
 > - **Source Code**: [`src/en/`](src/en/) (English) | [`src/ja/`](src/ja/) (Japanese)
 > - **Documentation**: [`docs/en/`](docs/en/) (English) | [`docs/ja/`](docs/ja/) (Japanese)
-> - **Quick Start**: [`docs/en/USAGE_EN.md`](docs/en/USAGE_EN.md)
 
 Implementation of Isamu Kaneko's original Error-Diffusion (ED) method applied to Spiking Neural Networks (SNN).
 
@@ -156,8 +155,6 @@ python src/en/ed_multi_lif_snn.py --mnist --hidden 512,256,128 --lr 0.1 --epochs
 > - **English commented version**: Use `src/en/` directory
 > - **日本語コメント版**: `src/ja/` ディレクトリを使用 ([日本語ガイド](README.md))
 
-For detailed usage instructions, see [USAGE_EN.md](docs/en/USAGE_EN.md).
-
 ### Advanced Usage
 ```bash
 # Full feature training with visualization
@@ -185,7 +182,6 @@ python src/en/ed_multi_lif_snn.py \
 
 ### 🛠️ Development
 - 🏗️ [Project Overview](docs/en/PROJECT_OVERVIEW.md)
-- 🔧 [Usage Guide](docs/en/USAGE_EN.md)
 - 🧪 [ED Method History](docs/en/EDLA_Isamu_Kaneko.md)
 
 ## Project Structure
@@ -208,14 +204,12 @@ ed_multi_snn/
 ├── 📁 docs/                        # Documentation
 │   ├── 📁 ja/                      # Japanese documentation
 │   │   ├── 📄 ed_multi_snn.prompt.md      # Technical specification
-│   │   ├── 📄 USAGE.md                    # Usage guide
 │   │   ├── 📄 ED法_解説資料.md             # ED method theory
 │   │   ├── 📄 EDLA_金子勇氏.md             # Kaneko's original paper
 │   │   ├── 📄 PROJECT_OVERVIEW.md         # Project overview
 │   │   └── 🖼️ fig1-4.gif                  # Reference figures
 │   └── 📁 en/                      # English documentation
 │       ├── 📄 ed_multi_snn.prompt_EN.md   # Technical specification
-│       ├── 📄 USAGE_EN.md                 # Usage guide
 │       ├── 📄 ED_Method_Explanation.md    # ED method theory
 │       ├── 📄 EDLA_Isamu_Kaneko.md        # Kaneko's original paper
 │       ├── 📄 PROJECT_OVERVIEW.md         # Project overview
@@ -232,7 +226,6 @@ ed_multi_snn/
 |------|---------|----------|
 | [`src/en/ed_multi_lif_snn.py`](src/en/ed_multi_lif_snn.py) | Complete LIF-SNN implementation | English |
 | [`src/ja/ed_multi_lif_snn.py`](src/ja/ed_multi_lif_snn.py) | Complete LIF-SNN implementation | Japanese |
-| [`docs/en/USAGE_EN.md`](docs/en/USAGE_EN.md) | Comprehensive usage guide | English |
 | [`docs/en/ed_multi_snn.prompt_EN.md`](docs/en/ed_multi_snn.prompt_EN.md) | Technical specification | English |
 
 ### 📊 Repository Statistics

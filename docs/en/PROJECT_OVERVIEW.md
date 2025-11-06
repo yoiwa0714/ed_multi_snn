@@ -144,7 +144,6 @@ ed_multi_snn/
 ### Technical Specifications
 
 - [ed_multi_snn.prompt_EN.md](ed_multi_snn.prompt_EN.md) - Complete technical specification
-- [USAGE_EN.md](USAGE_EN.md) - Detailed usage instructions
 
 ### Theoretical Background
 

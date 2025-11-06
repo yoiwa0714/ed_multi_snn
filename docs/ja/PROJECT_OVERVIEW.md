@@ -126,7 +126,6 @@ ed_multi_snn/
 
 ### 技術仕様
 - [ed_multi_snn.prompt.md](ed_multi_snn.prompt.md) - 完全技術仕様書
-- [USAGE.md](USAGE.md) - 詳細使用方法
 
 ### 理論背景
 - [ED法_解説資料.md](ED法_解説資料.md) - ED法の詳細解説

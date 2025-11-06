@@ -156,13 +156,11 @@ ed_multi_snn/
 │   ├── ja/                        # 日本語ドキュメント
 │   │   ├── ed_multi_snn.prompt.md # ED法実装仕様書
 │   │   ├── ED法_解説資料.md       # ED法理論解説
-│   │   ├── USAGE.md               # 使用方法詳細
 │   │   ├── EDLA_金子勇氏.md       # 金子勇氏の功績
 │   │   └── PROJECT_OVERVIEW.md    # プロジェクト概要
 │   └── en/                        # English Documentation
 │       ├── ed_multi_snn.prompt_EN.md
 │       ├── ED_Method_Explanation.md
-│       ├── USAGE_EN.md
 │       ├── EDLA_Isamu_Kaneko.md
 │       └── PROJECT_OVERVIEW.md
 │
@@ -314,8 +312,6 @@ python src/ja/ed_multi_frelu_snn.py --mnist --train 1000 --test 100 --epochs 10
 > **💡 言語選択**: 
 > - **日本語コメント版**: `src/ja/` ディレクトリを使用
 > - **English commented version**: Use `src/en/` directory ([English Guide](README_EN.md))
-
-詳細な使用方法は [USAGE.md](docs/ja/USAGE.md) をご覧ください。
 
 ## 主要なコマンドライン引数
 
@@ -526,8 +522,7 @@ Public Release Version (2025-10-31)
 ## 関連ドキュメント
 
 - 📖 [技術仕様書](docs/ja/ed_multi_snn.prompt.md) - ED法実装仕様とアルゴリズム解説
-- � [ED法_解説資料](docs/ja/ED法_解説資料.md) - ED法理論の詳細解説
-- 🎓 [USAGE](docs/ja/USAGE.md) - 詳細な使用方法ガイド
+- 📚 [ED法_解説資料](docs/ja/ED法_解説資料.md) - ED法理論の詳細解説
 - 👨‍💻 [金子勇氏について](docs/ja/EDLA_金子勇氏.md) - ED法開発者の功績
 
 ---
