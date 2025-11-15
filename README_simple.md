@@ -130,51 +130,102 @@ flowchart TD
 
 ### 2. システム全体構成図（ブロックダイアグラム）
 
+#### 2-1. メインプログラム構成
+
 ```mermaid
 flowchart TD
-    Main["📦 ed_multi_lif_snn_simple.py<br/>メインプログラム"]
+    Main["📦 ed_multi_lif_snn_simple.py<br/><br/>メインプログラム"]
     
-    Main --> HP[HyperParams<br/>パラメータ管理]
-    Main --> Viz[RealtimeLearningVisualizer<br/>リアルタイム可視化]
-    Main --> Prep[PureEDPreprocessor<br/>データ前処理]
-    Main --> EDCore[MultiLayerEDCore<br/>ED法学習コア]
-    Main --> SNN[SimpleSNN<br/>SNNネットワーク]
+    Main --> HP["HyperParams<br/><br/>パラメータ管理<br/>・学習率、アミン濃度<br/>・LIFパラメータ<br/>・データセット設定"]
+    
+    Main --> Viz["RealtimeLearningVisualizer<br/><br/>リアルタイム可視化<br/>・学習曲線表示<br/>・混同行列<br/>・精度グラフ"]
+    
+    Main --> Prep["PureEDPreprocessor<br/><br/>データ前処理<br/>・E/Iペア変換<br/>・正規化<br/>・バッチ生成"]
+    
+    Main --> EDCore["MultiLayerEDCore<br/><br/>ED法学習コア<br/>・重み更新<br/>・アミン拡散<br/>・誤差計算"]
+    
+    Main --> SNN["SimpleSNN<br/><br/>SNNネットワーク<br/>・LIF層管理<br/>・スパイク処理<br/>・発火判定"]
     
     HP --> EDCore
     HP --> SNN
     
-    Prep --> DataLoader[MiniBatchDataLoader<br/>バッチ処理]
-    DataLoader --> DataManager[dataset_manager<br/>データセット管理]
+    style Main fill:#e1f0ff,stroke:#333,stroke-width:4px,color:#000,font-size:16px
+    style HP fill:#fff0e1,stroke:#333,stroke-width:3px,color:#000
+    style EDCore fill:#ffe1e1,stroke:#333,stroke-width:3px,color:#000
+    style SNN fill:#e1ffe1,stroke:#333,stroke-width:3px,color:#000
+    style Viz fill:#f0e1ff,stroke:#333,stroke-width:3px,color:#000
+    style Prep fill:#e1f5e1,stroke:#333,stroke-width:3px,color:#000
+```
+
+#### 2-2. モジュール依存関係
+
+**ブロック①: データ処理系**
+```mermaid
+flowchart LR
+    Prep["PureEDPreprocessor<br/><br/>データ前処理<br/>・E/Iペア変換<br/>・正規化<br/>・バッチ生成"]
     
-    EDCore --> EDCoreLib[ed_core.py<br/>ED法コアライブラリ]
+    Prep --> DataLoader["📦 MiniBatchDataLoader<br/><br/>ミニバッチ処理<br/>・バッチ生成<br/>・シャッフル<br/>・サンプリング"]
     
-    SNN --> LIF[lif_neuron.py<br/>LIFニューロン実装]
-    SNN --> SNNNet[snn_network.py<br/>SNNネットワーク]
+    DataLoader --> DataMgr["dataset_manager<br/><br/>データセット管理<br/>・MNIST読込<br/>・Fashion-MNIST読込<br/>・クラスラベル管理"]
     
-    Viz --> Heatmap[snn_heatmap_visualizer<br/>ヒートマップ可視化]
-    Viz --> MPL[Matplotlib<br/>グラフ描画]
+    DataLoader --> TF["🔧 TensorFlow<br/><br/>データセット<br/>ライブラリ<br/>・tfds.load()"]
     
-    Main --> Verifier[accuracy_loss_verifier<br/>精度・誤差検証]
+    style Prep fill:#e1f5e1,stroke:#333,stroke-width:3px,color:#000
+    style DataLoader fill:#fff0e1,stroke:#333,stroke-width:3px,color:#000
+    style DataMgr fill:#e1f5f0,stroke:#333,stroke-width:2px,color:#000
+    style TF fill:#ffe1f0,stroke:#333,stroke-width:2px,color:#000
+```
+
+**ブロック②: 学習・ニューロン処理系**
+```mermaid
+flowchart LR
+    EDCore["MultiLayerEDCore<br/><br/>ED法学習コア<br/>・重み更新<br/>・アミン拡散<br/>・誤差計算"]
     
-    DataLoader --> TF[TensorFlow<br/>データセット]
-    EDCore --> NP[NumPy/CuPy<br/>数値計算]
-    SNN --> NP
+    SNN["SimpleSNN<br/><br/>SNNネットワーク<br/>・LIF層管理<br/>・スパイク処理<br/>・発火判定"]
     
-    Main --> Font[font_config<br/>フォント設定]
-    Main --> Profiler[profiler<br/>性能測定]
+    Viz["RealtimeLearningVisualizer<br/><br/>リアルタイム可視化<br/>・学習曲線表示<br/>・混同行列<br/>・精度グラフ"]
     
-    style Main fill:#e1f0ff,stroke:#333,stroke-width:3px,color:#000
-    style HP fill:#fff0e1,stroke:#333,stroke-width:2px,color:#000
-    style EDCore fill:#ffe1e1,stroke:#333,stroke-width:2px,color:#000
-    style SNN fill:#e1ffe1,stroke:#333,stroke-width:2px,color:#000
-    style Viz fill:#f0e1ff,stroke:#333,stroke-width:2px,color:#000
-    style DataLoader fill:#e1f5e1,stroke:#333,stroke-width:2px,color:#000
-    style EDCoreLib fill:#ffe1e1,stroke:#333,stroke-width:2px,color:#000
+    EDCore --> EDLib["📦 ed_core.py<br/><br/>ED法コアライブラリ<br/>・重み初期化<br/>・フォワード計算<br/>・アミン濃度計算<br/>・勾配計算"]
+    
+    SNN --> LIF["📦 lif_neuron.py<br/><br/>LIFニューロン実装<br/>・膜電位更新式<br/>・発火判定<br/>・不応期管理<br/>・Poisson符号化"]
+    
+    SNN --> SNNNet["snn_network.py<br/><br/>SNNネットワーク<br/>・多層構造管理<br/>・層間接続<br/>・スパイク伝播"]
+    
+    Viz --> Heatmap["snn_heatmap_visualizer<br/><br/>ヒートマップ可視化<br/>・発火パターン表示<br/>・層別活性度<br/>・時系列分析"]
+    
+    EDCore --> NP1["🔧 NumPy/CuPy<br/><br/>数値計算<br/>ライブラリ<br/>・行列演算"]
+    
+    SNN --> NP2["🔧 NumPy/CuPy<br/><br/>数値計算<br/>ライブラリ<br/>・行列演算"]
+    
+    Viz --> MPL["🔧 Matplotlib<br/><br/>グラフ描画<br/>ライブラリ<br/>・plot/imshow"]
+    
+    style EDCore fill:#ffe1e1,stroke:#333,stroke-width:3px,color:#000
+    style SNN fill:#e1ffe1,stroke:#333,stroke-width:3px,color:#000
+    style Viz fill:#f0e1ff,stroke:#333,stroke-width:3px,color:#000
+    style EDLib fill:#ffe1e1,stroke:#333,stroke-width:2px,color:#000
     style LIF fill:#e1ffe1,stroke:#333,stroke-width:2px,color:#000
     style SNNNet fill:#e1ffe1,stroke:#333,stroke-width:2px,color:#000
-    style TF fill:#ffe1f0,stroke:#333,stroke-width:2px,color:#000
-    style NP fill:#ffe1f0,stroke:#333,stroke-width:2px,color:#000
+    style Heatmap fill:#f0e1ff,stroke:#333,stroke-width:2px,color:#000
+    style NP1 fill:#ffe1f0,stroke:#333,stroke-width:2px,color:#000
+    style NP2 fill:#ffe1f0,stroke:#333,stroke-width:2px,color:#000
     style MPL fill:#ffe1f0,stroke:#333,stroke-width:2px,color:#000
+```
+
+**ブロック③: ユーティリティ系**
+```mermaid
+flowchart LR
+    Main["メインプログラム<br/><br/>全体制御<br/>・初期化<br/>・学習ループ<br/>・評価実行"]
+    
+    Main --> Verifier["accuracy_loss_verifier<br/><br/>精度・誤差検証<br/>・計算精度チェック<br/>・誤差妥当性確認<br/>・デバッグ支援"]
+    
+    Main --> Font["font_config<br/><br/>フォント設定<br/>・日本語フォント<br/>・グラフ表示用<br/>・OS別対応"]
+    
+    Main --> Profiler["profiler<br/><br/>性能測定<br/>・処理時間計測<br/>・ボトルネック特定<br/>・最適化支援"]
+    
+    style Main fill:#e1f0ff,stroke:#333,stroke-width:3px,color:#000
+    style Verifier fill:#fff0e1,stroke:#333,stroke-width:2px,color:#000
+    style Font fill:#e1f5f0,stroke:#333,stroke-width:2px,color:#000
+    style Profiler fill:#ffe1e1,stroke:#333,stroke-width:2px,color:#000
 ```
 
 ### 3. ED学習ループ詳細フロー（ブレークダウン版）
