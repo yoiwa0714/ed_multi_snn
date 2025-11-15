@@ -1532,11 +1532,9 @@ class MultiLayerEDCore:
         outputs = np.zeros(self.output_units)
         
         # ========================================
-        # v025 Step 3a: 入力層LIF統合
+        # 全層LIF化（入力層+隠れ層+出力層）
         # ========================================
-        # 全層LIF化（入力層+隠れ層+出力層 - 常に有効）
-        if True:  # 旧: if self.hp.use_input_lif
-            # Step 3a: 生物学的妥当性の高い入力層LIF処理
+        # Step 3a: 生物学的妥当性の高い入力層LIF処理
             # 画素値 [784] → スパイク列 [n_timesteps, 784] → E/Iペア [n_timesteps, 1568] 
             #   → 入力層LIF → 発火率 [1568] → 隠れ層伝播
             
@@ -1592,13 +1590,9 @@ class MultiLayerEDCore:
                         self.layer_outputs[n] = layer_outputs
                 
                 outputs[n] = self.layer_outputs[n][-1][0]
-            
-            return outputs
         
-        # v019 Phase 12: LIF層使用時の条件分岐（hp.enable_lifのみで判定）
-        # v025 Step 2a/2b: 隠れ層・出力層LIF化
-        # （到達不能 - use_input_lifが常にTrueのため）
- 
+        return outputs
+    
     def pure_ed_learning_step(self, inputs, targets, outputs):
         """真の多層ED学習ステップ（Phase 13修正）
         
