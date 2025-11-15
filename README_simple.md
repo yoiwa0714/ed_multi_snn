@@ -88,6 +88,161 @@ python src/ja/ed_multi_lif_snn_simple.py --mnist --train 1000 --test 100 --epoch
 - `--heatmap`: スパイク活動ヒートマップ表示
 - `--verbose`: 詳細ログ表示
 
+## 📐 システム構成図
+
+### 1. ハイレベルフローチャート（全体の動作フロー）
+
+```mermaid
+flowchart TD
+    Start([プログラム開始]) --> Init[パラメータ初期化<br/>HyperParams]
+    Init --> LoadData[データ読込<br/>MNIST/Fashion-MNIST]
+    LoadData --> Preprocess[前処理<br/>E/Iペア変換<br/>正規化]
+    Preprocess --> InitLIF[LIFニューロン層初期化<br/>入力層/隠れ層/出力層]
+    InitLIF --> InitED[ED法コア初期化<br/>重み初期化]
+    
+    InitED --> EpochLoop{エポックループ<br/>epochs回繰り返し}
+    
+    EpochLoop -->|各エポック| BatchLoop[ミニバッチ処理<br/>バッチサイズ単位]
+    
+    BatchLoop --> Forward[フォワード計算<br/>1. スパイク符号化<br/>2. LIF膜電位更新<br/>3. 発火判定]
+    Forward --> CalcError[誤差計算<br/>教師信号との差分]
+    CalcError --> AmineCalc[アミン濃度計算<br/>誤差に基づく]
+    AmineCalc --> UpdateWeight[重み更新<br/>ED法による学習]
+    
+    UpdateWeight --> BatchEnd{バッチ終了?}
+    BatchEnd -->|No| BatchLoop
+    BatchEnd -->|Yes| Evaluate[評価<br/>テストデータで精度測定]
+    
+    Evaluate --> Visualize[可視化更新<br/>学習曲線/ヒートマップ]
+    Visualize --> EpochEnd{エポック終了?}
+    
+    EpochEnd -->|No| EpochLoop
+    EpochEnd -->|Yes| FinalTest[最終評価<br/>テスト精度計算]
+    FinalTest --> ShowResults[結果表示<br/>精度/誤差/学習時間]
+    ShowResults --> End([プログラム終了])
+    
+    style Start fill:#e1f5e1
+    style End fill:#ffe1e1
+    style Forward fill:#e1f0ff
+    style UpdateWeight fill:#fff0e1
+    style Evaluate fill:#f0e1ff
+```
+
+### 2. システム全体構成図（ブロックダイアグラム）
+
+```mermaid
+graph TB
+    subgraph Main["ed_multi_lif_snn_simple.py<br/>メインプログラム"]
+        HP[HyperParams<br/>パラメータ管理]
+        Viz[RealtimeLearningVisualizer<br/>リアルタイム可視化]
+        Prep[PureEDPreprocessor<br/>データ前処理]
+        EDCore[MultiLayerEDCore<br/>ED法学習コア]
+        SNN[SimpleSNN<br/>SNNネットワーク]
+    end
+    
+    subgraph Modules["modules/<br/>共通モジュール"]
+        subgraph DataMod["data/"]
+            DataLoader[MiniBatchDataLoader<br/>バッチ処理]
+            DataManager[dataset_manager<br/>データセット管理]
+        end
+        
+        subgraph SNNMod["snn/"]
+            LIF[lif_neuron.py<br/>LIFニューロン実装]
+            SNNNet[snn_network.py<br/>SNNネットワーク]
+        end
+        
+        subgraph EDMod["ed_learning/"]
+            EDCoreLib[ed_core.py<br/>ED法コアライブラリ]
+        end
+        
+        subgraph Utils["utils/"]
+            Font[font_config<br/>フォント設定]
+            Profiler[profiler<br/>性能測定]
+        end
+        
+        subgraph Viz2["visualization/"]
+            Heatmap[snn_heatmap_visualizer<br/>ヒートマップ可視化]
+        end
+        
+        Verifier[accuracy_loss_verifier<br/>精度・誤差検証]
+    end
+    
+    subgraph External["外部ライブラリ"]
+        TF[TensorFlow<br/>データセット]
+        NP[NumPy/CuPy<br/>数値計算]
+        MPL[Matplotlib<br/>グラフ描画]
+    end
+    
+    HP --> EDCore
+    HP --> SNN
+    Prep --> DataLoader
+    EDCore --> EDCoreLib
+    SNN --> LIF
+    SNN --> SNNNet
+    Viz --> Heatmap
+    Viz --> MPL
+    DataLoader --> TF
+    EDCore --> NP
+    SNN --> NP
+    
+    style Main fill:#e1f0ff
+    style Modules fill:#f0ffe1
+    style External fill:#ffe1f0
+    style HP fill:#fff0e1
+    style EDCore fill:#ffe1e1
+    style SNN fill:#e1ffe1
+```
+
+### 3. ED学習ループ詳細フロー（ブレークダウン版）
+
+```mermaid
+flowchart TD
+    Start([エポック開始]) --> ShuffleData[データシャッフル<br/>ランダム順序生成]
+    
+    ShuffleData --> GetBatch[ミニバッチ取得<br/>batch_size個のサンプル]
+    
+    GetBatch --> SpikeEncode[スパイク符号化<br/>ポアソン符号化]
+    
+    subgraph Forward["フォワード計算"]
+        SpikeEncode --> InputLIF[入力層LIF処理<br/>スパイク→膜電位]
+        InputLIF --> InputFire[入力層発火判定<br/>閾値超過チェック]
+        InputFire --> HiddenCalc[隠れ層計算<br/>重み付き和]
+        HiddenCalc --> HiddenLIF[隠れ層LIF処理<br/>膜電位更新]
+        HiddenLIF --> HiddenFire[隠れ層発火判定]
+        HiddenFire --> OutputCalc[出力層計算<br/>各クラスの活性]
+        OutputCalc --> OutputLIF[出力層LIF処理]
+        OutputLIF --> OutputFire[出力層発火判定<br/>予測結果]
+    end
+    
+    OutputFire --> CompareTeacher[教師信号との比較<br/>正解ラベルとの差分]
+    
+    subgraph Learning["ED法学習"]
+        CompareTeacher --> CalcOutputError[出力誤差計算<br/>teacher - output]
+        CalcOutputError --> OutputAmine[出力層アミン濃度<br/>誤差に基づく計算]
+        OutputAmine --> DiffuseAmine[アミン拡散<br/>隠れ層へ伝播]
+        DiffuseAmine --> HiddenAmine[隠れ層アミン濃度<br/>拡散率 × 出力誤差]
+        HiddenAmine --> UpdateOutputW[出力層重み更新<br/>Δw = α × amine × input × error]
+        UpdateOutputW --> UpdateHiddenW[隠れ層重み更新<br/>同様のED法則]
+        UpdateHiddenW --> ApplyDale[Dale's Principle適用<br/>E: w≥0, I: w≤0]
+    end
+    
+    ApplyDale --> UpdateStats[統計更新<br/>精度・誤差記録]
+    
+    UpdateStats --> CheckBatch{全バッチ<br/>処理完了?}
+    CheckBatch -->|No| GetBatch
+    CheckBatch -->|Yes| TestEval[テスト評価<br/>検証データで精度計算]
+    
+    TestEval --> UpdateViz[可視化更新<br/>グラフ・ヒートマップ]
+    UpdateViz --> End([エポック終了])
+    
+    style Forward fill:#e1f0ff
+    style Learning fill:#fff0e1
+    style Start fill:#e1f5e1
+    style End fill:#ffe1e1
+    style SpikeEncode fill:#f0e1ff
+    style ApplyDale fill:#ffe1f0
+```
+
 ## 🔬 Simple版で学習できる内容
 
 ### 1. ED法の基本原理
