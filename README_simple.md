@@ -121,11 +121,11 @@ flowchart TD
     FinalTest --> ShowResults[結果表示<br/>精度/誤差/学習時間]
     ShowResults --> End([プログラム終了])
     
-    style Start fill:#e1f5e1
-    style End fill:#ffe1e1
-    style Forward fill:#e1f0ff
-    style UpdateWeight fill:#fff0e1
-    style Evaluate fill:#f0e1ff
+    style Start fill:#e1f5e1,stroke:#333,stroke-width:2px,color:#000
+    style End fill:#ffe1e1,stroke:#333,stroke-width:2px,color:#000
+    style Forward fill:#e1f0ff,stroke:#333,stroke-width:2px,color:#000
+    style UpdateWeight fill:#fff0e1,stroke:#333,stroke-width:2px,color:#000
+    style Evaluate fill:#f0e1ff,stroke:#333,stroke-width:2px,color:#000
 ```
 
 ### 2. システム全体構成図（ブロックダイアグラム）
@@ -185,12 +185,12 @@ graph TB
     EDCore --> NP
     SNN --> NP
     
-    style Main fill:#e1f0ff
-    style Modules fill:#f0ffe1
-    style External fill:#ffe1f0
-    style HP fill:#fff0e1
-    style EDCore fill:#ffe1e1
-    style SNN fill:#e1ffe1
+    style Main fill:#e1f0ff,stroke:#333,stroke-width:2px,color:#000
+    style Modules fill:#f0ffe1,stroke:#333,stroke-width:2px,color:#000
+    style External fill:#ffe1f0,stroke:#333,stroke-width:2px,color:#000
+    style HP fill:#fff0e1,stroke:#333,stroke-width:2px,color:#000
+    style EDCore fill:#ffe1e1,stroke:#333,stroke-width:2px,color:#000
+    style SNN fill:#e1ffe1,stroke:#333,stroke-width:2px,color:#000
 ```
 
 ### 3. ED学習ループ詳細フロー（ブレークダウン版）
@@ -235,12 +235,12 @@ flowchart TD
     TestEval --> UpdateViz[可視化更新<br/>グラフ・ヒートマップ]
     UpdateViz --> End([エポック終了])
     
-    style Forward fill:#e1f0ff
-    style Learning fill:#fff0e1
-    style Start fill:#e1f5e1
-    style End fill:#ffe1e1
-    style SpikeEncode fill:#f0e1ff
-    style ApplyDale fill:#ffe1f0
+    style Forward fill:#e1f0ff,stroke:#333,stroke-width:2px,color:#000
+    style Learning fill:#fff0e1,stroke:#333,stroke-width:2px,color:#000
+    style Start fill:#e1f5e1,stroke:#333,stroke-width:2px,color:#000
+    style End fill:#ffe1e1,stroke:#333,stroke-width:2px,color:#000
+    style SpikeEncode fill:#f0e1ff,stroke:#333,stroke-width:2px,color:#000
+    style ApplyDale fill:#ffe1f0,stroke:#333,stroke-width:2px,color:#000
 ```
 
 ## 🔬 Simple版で学習できる内容
