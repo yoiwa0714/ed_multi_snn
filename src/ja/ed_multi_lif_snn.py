@@ -59,9 +59,9 @@ python ed_snn_mnist_published.py --fashion --train 1000 --test 100 --epochs 10
 # リアルタイム可視化付き
 python ed_snn_mnist_published.py --mnist --train 1000 --test 100 --epochs 10 --viz --heatmap
 
-# スパイク符号化パラメータのカスタマイズ
+# スパイク符号化パラメータのカスタマイズ（全層LIF化完了）
 python ed_snn_mnist_published.py --mnist --train 1000 --test 100 --epochs 10 \
-  --use_input_lif --spike_encoding poisson \
+  --spike_encoding poisson \
   --spike_max_rate 150 --spike_sim_time 50 --spike_dt 1.0
 ```
 
@@ -91,8 +91,7 @@ python ed_snn_mnist_published.py --mnist --train 1000 --test 100 --epochs 10 \
 - `--tau_m FLOAT`: 膜時定数（デフォルト: 20.0 ms）
 - `--tau_ref FLOAT`: 不応期（デフォルト: 2.0 ms）
 
-**スパイク符号化パラメータ**:
-- `--use_input_lif`: 入力層のLIF化を有効化
+**スパイク符号化パラメータ（全層LIF化完了）**:
 - `--spike_encoding TYPE`: 符号化方式（poisson/rate/temporal、デフォルト: poisson）
 - `--spike_max_rate FLOAT`: 最大発火率（デフォルト: 150.0 Hz）
 - `--spike_sim_time FLOAT`: シミュレーション時間（デフォルト: 50.0 ms）
@@ -430,11 +429,7 @@ class HyperParams:
         self.R_m = 10.0               # 膜抵抗 (MΩ)
         self.simulation_time = 50.0   # シミュレーション時間 (ms)
         
-        # === LIF統合制御（v019 Phase 4追加） ===
-        self.enable_lif = False       # LIF層を使用するか（デフォルト: 無効）
-        
-        # === Step 3a: 入力層LIF化パラメータ（v025追加） ===
-        self.use_input_lif = False       # 入力層LIF使用フラグ（デフォルト: 無効）
+        # === スパイク符号化パラメータ（全層LIF化により常に有効） ===
         self.spike_encoding_method = 'poisson'  # スパイク符号化方法 ('poisson', 'rate', 'temporal')
         self.spike_max_rate = 100.0      # 最大発火率 (Hz)
         self.spike_simulation_time = 50.0  # スパイクシミュレーション時間 (ms)
@@ -1863,15 +1858,13 @@ class MultiLayerEDCore:
         outputs = np.zeros(self.output_units)
         
         # ========================================
-        # v025 Step 3a: 入力層LIF統合
+        # 全層LIF化（入力層+隠れ層+出力層）
         # ========================================
-        # 全層LIF化（入力層+隠れ層+出力層 - 常に有効）
-        if True:  # 旧: if self.hp.use_input_lif
-            # Step 3a: 生物学的妥当性の高い入力層LIF処理
-            # 画素値 [784] → スパイク列 [n_timesteps, 784] → E/Iペア [n_timesteps, 1568] 
-            #   → 入力層LIF → 発火率 [1568] → 隠れ層伝播
-            
-            # Step 1: 画素値 [1568] から元の画素値 [784] を抽出
+        # Step 3a: 生物学的妥当性の高い入力層LIF処理
+        # 画素値 [784] → スパイク列 [n_timesteps, 784] → E/Iペア [n_timesteps, 1568] 
+        #   → 入力層LIF → 発火率 [1568] → 隠れ層伝播
+        
+        # Step 1: 画素値 [1568] から元の画素値 [784] を抽出
             # inputs は E/Iペア化済み [1568]、偶数インデックスが元の画素値
             original_pixels = inputs[0::2]  # [784]
             
@@ -1914,49 +1907,6 @@ class MultiLayerEDCore:
                         # GPU→CPUに戻す（layer_outputsはNumPy配列として保存）
                         if self.use_gpu:
                             layer_outputs.append(np.array(activated) if not hasattr(activated, 'get') else activated.get())
-                        else:
-                            layer_outputs.append(activated)
-                        
-                        current_layer_output = activated
-                    
-                    if t == self.time_loops - 1:
-                        self.layer_outputs[n] = layer_outputs
-                
-                outputs[n] = self.layer_outputs[n][-1][0]
-            
-            return outputs
-        
-        # v019 Phase 12: LIF層使用時の条件分岐（True  # 全層LIF化により常に有効のみで判定）
-        # v025 Step 2a/2b: 隠れ層・出力層LIF化
-        # （到達不能 - use_input_lifが常にTrueのため）
-
-        else:
-            # ========================================
-            # 従来のシグモイドベース順伝播処理（Phase 13修正 + GPU最適化）
-            # ========================================
-            
-            # GPU対応: 入力データをGPUに転送（1回のみ）
-            if self.use_gpu:
-                inputs_gpu = self.xp.asarray(inputs)
-            else:
-                inputs_gpu = inputs
-            
-            for n in range(self.output_units):
-                for t in range(self.time_loops):
-                    layer_outputs = []
-                    
-                    # Phase 13修正: input_unitsが正しく設定されているので、
-                    # inputs[0::2]による抽出は不要。inputsをそのまま使用。
-                    current_layer_output = inputs_gpu.copy() if self.use_gpu else inputs.copy()
-                    
-                    for layer_idx, layer_weight in enumerate(self.layer_weights[n]):
-                        # GPU最適化: 重み行列は既にGPU上にあるので転送不要
-                        linear_out = layer_weight @ current_layer_output
-                        activated = self._sigmoid_vectorized(linear_out)
-                        
-                        # GPU→CPUに戻す（layer_outputsはNumPy配列として保存）
-                        if self.use_gpu:
-                            layer_outputs.append(self.xp.asnumpy(activated))
                         else:
                             layer_outputs.append(activated)
                         
