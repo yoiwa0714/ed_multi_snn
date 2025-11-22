@@ -228,24 +228,24 @@ Public Release Version (2025-10-24)
      - 30分以上経過してもエポック0のまま
      - ユーザーの意図（少数サンプルで高速実験）を無視
    
-   - **第2版修正内容**: エポックごとに異なるサンプルを抽出（最適解）
+   - **第2版修正内容**: 全エポックで同一訓練データセットを使用（機械学習の標準仕様）
      - load_dataset関数: データセット全体を読み込み（全データ保持）
-     - 訓練ループ: エポックごとに指定サンプル数をランダム抽出
-     - 過学習防止: エポックごとに異なる256サンプルを使用
+     - 訓練ループ: エポック開始前に1回だけ指定サンプル数をサンプリング
+     - 学習方式: 全エポックで同じデータセットを繰り返し学習（シャッフル順序は変更可能）
      - パフォーマンス: --train 256指定時は256サンプルのみ処理（高速）
      - 柔軟性: --train 0または未指定で全データ使用
    
    - **理論的根拠**: ed_multi_snn.prompt.md準拠
      - 「大規模データセットでの学習」: 全データを保持
      - 「効率的な処理」: 実験時は少数サンプルで高速実行
-     - 「過学習防止」: エポックごとに異なるサンプル抽出
+     - 「標準的な学習方式」: 全エポックで同一データセット使用（重みの最適化）
      - 「柔軟性」: ユーザーの意図を尊重
    
    修正箇所:
-   - load_dataset関数（1288-1318行目）: 全データを返す、docstring更新
-   - main関数（1481-1502行目）: サンプリング戦略のメッセージ追加
-   - 訓練ループ（1567-1588行目）: エポックごとのサンプリング実装
-   - 最終評価（1763-1775行目）: 変数名修正
+   - load_dataset関数: 全データを返す、docstring更新
+   - main関数: サンプリング戦略のメッセージ追加
+   - 訓練ループ: エポック開始前の1回のみサンプリング実装
+   - 最終評価: 変数名修正
 
 🎨 Phase 2（2025-10-10 夜）: リアルタイム表示完全統一（ed_multi_snn.prompt.md準拠）✅
    
@@ -2406,7 +2406,7 @@ def main():
     
     # サンプリング戦略のメッセージ
     if hp.train_samples > 0 and hp.train_samples < len(train_processed_all):
-        sampling_strategy = f"エポックごとに{use_train_samples}サンプルをランダム抽出（過学習防止）"
+        sampling_strategy = f"エポック開始前に{use_train_samples}サンプルを1回サンプリング（全エポックで同一データセット使用）"
     else:
         sampling_strategy = "全データを使用"
     
@@ -2470,6 +2470,26 @@ def main():
     train_results_log = []  # 各エポックの訓練結果: [(data_idx, true_label, pred_label), ...]
     test_results_log = []   # 各エポックのテスト結果: [(data_idx, true_label, pred_label), ...]
     
+    # エポック開始前の1回のみサンプリング（ed_multi_snn.prompt.md準拠・機械学習の標準仕様）
+    if use_train_samples < len(train_processed_all):
+        # 指定サンプル数 < 全データ: 1回だけランダムサンプリング
+        train_indices = np.random.choice(len(train_processed_all), use_train_samples, replace=False)
+        train_processed = train_processed_all[train_indices]
+        train_labels_processed = train_labels_processed_all[train_indices]
+    else:
+        # 全データを使用
+        train_processed = train_processed_all
+        train_labels_processed = train_labels_processed_all
+    
+    # テストデータも同様に1回だけサンプリング
+    if use_test_samples < len(test_processed_all):
+        test_indices = np.random.choice(len(test_processed_all), use_test_samples, replace=False)
+        test_processed = test_processed_all[test_indices]
+        test_labels_processed = test_labels_processed_all[test_indices]
+    else:
+        test_processed = test_processed_all
+        test_labels_processed = test_labels_processed_all
+    
     epoch_pbar = tqdm(range(hp.epochs), 
                       desc="",  # スペース確保のため削除
                       unit="epoch",
@@ -2483,26 +2503,6 @@ def main():
         
         # 🔍 検証システム: このエポックの訓練結果記録用
         epoch_train_log = []
-        
-        # エポックごとのサンプリング（ed_multi_snn.prompt.md準拠・過学習防止）
-        if use_train_samples < len(train_processed_all):
-            # 指定サンプル数 < 全データ: ランダムサンプリング
-            train_indices = np.random.choice(len(train_processed_all), use_train_samples, replace=False)
-            train_processed = train_processed_all[train_indices]
-            train_labels_processed = train_labels_processed_all[train_indices]
-        else:
-            # 全データを使用
-            train_processed = train_processed_all
-            train_labels_processed = train_labels_processed_all
-        
-        # テストデータも同様にサンプリング
-        if use_test_samples < len(test_processed_all):
-            test_indices = np.random.choice(len(test_processed_all), use_test_samples, replace=False)
-            test_processed = test_processed_all[test_indices]
-            test_labels_processed = test_labels_processed_all[test_indices]
-        else:
-            test_processed = test_processed_all
-            test_labels_processed = test_labels_processed_all
         
         # ミニバッチデータローダー作成
         train_loader = MiniBatchDataLoader(
