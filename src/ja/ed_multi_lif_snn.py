@@ -2530,11 +2530,14 @@ def main():
                 # ヒートマップ更新（MNIST/Fashion-MNIST: 10サンプルごと）
                 update_interval = 10
                 if heatmap_integration and total_samples % update_interval == 0:
+                    # 学習後の最新の予測を取得（ヒートマップ用）
+                    outputs_after_learning = ed_core.forward_pass(sample)
+                    
                     spike_activities = convert_ed_outputs_to_spike_activities(
                         ed_core, sample, original_image_shape=image_shape
                     )
                     
-                    predicted_label = int(np.argmax(outputs))
+                    predicted_label = int(np.argmax(outputs_after_learning))
                     true_label = int(label)
                     
                     heatmap_integration.update_snn_heatmap(
@@ -2545,7 +2548,7 @@ def main():
                         predicted_label=predicted_label
                     )
                 
-                # 精度計算
+                # 精度計算（学習前の予測を使用：標準的な訓練評価）
                 predicted_label = int(np.argmax(outputs))
                 true_label = int(label)
                 
