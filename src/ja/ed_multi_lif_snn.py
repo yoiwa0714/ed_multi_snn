@@ -1865,57 +1865,57 @@ class MultiLayerEDCore:
         #   → 入力層LIF → 発火率 [1568] → 隠れ層伝播
         
         # Step 1: 画素値 [1568] から元の画素値 [784] を抽出
-            # inputs は E/Iペア化済み [1568]、偶数インデックスが元の画素値
-            original_pixels = inputs[0::2]  # [784]
-            
-            # Step 2: スパイク符号化（E/Iペア化を含む）
-            # [784] → [n_timesteps, 1568]
-            spike_trains = self._spike_encode(
-                pixel_values=original_pixels,
-                method=self.hp.spike_encoding_method,
-                max_rate=self.hp.spike_max_rate,
-                simulation_time=self.hp.spike_simulation_time,
-                dt=self.hp.spike_dt
-            )
-            
-            # Step 3: 入力層LIF活性化
-            # スパイク列 [n_timesteps, 1568] → 発火率 [1568]
-            input_activity = self._lif_activation_input_layer(
-                spike_trains=spike_trains,
-                neuron_types=self.input_neuron_types,
-                simulation_time=self.hp.spike_simulation_time,
-                dt=self.hp.spike_dt
-            )
-            
-            # Step 4: 発火率を隠れ層に伝播（従来のシグモイド処理）
-            # GPU対応: 入力データをGPUに転送（1回のみ）
-            if self.use_gpu:
-                inputs_gpu = input_activity  # 既にGPU配列
-            else:
-                inputs_gpu = input_activity
-            
-            for n in range(self.output_units):
-                for t in range(self.time_loops):
-                    layer_outputs = []
-                    current_layer_output = inputs_gpu.copy() if self.use_gpu else input_activity.copy()
-                    
-                    for layer_idx, layer_weight in enumerate(self.layer_weights[n]):
-                        # GPU最適化: 重み行列は既にGPU上にあるので転送不要
-                        linear_out = layer_weight @ current_layer_output
-                        activated = self._sigmoid_vectorized(linear_out)
-                        
-                        # GPU→CPUに戻す（layer_outputsはNumPy配列として保存）
-                        if self.use_gpu:
-                            layer_outputs.append(np.array(activated) if not hasattr(activated, 'get') else activated.get())
-                        else:
-                            layer_outputs.append(activated)
-                        
-                        current_layer_output = activated
-                    
-                    if t == self.time_loops - 1:
-                        self.layer_outputs[n] = layer_outputs
+        # inputs は E/Iペア化済み [1568]、偶数インデックスが元の画素値
+        original_pixels = inputs[0::2]  # [784]
+        
+        # Step 2: スパイク符号化（E/Iペア化を含む）
+        # [784] → [n_timesteps, 1568]
+        spike_trains = self._spike_encode(
+            pixel_values=original_pixels,
+            method=self.hp.spike_encoding_method,
+            max_rate=self.hp.spike_max_rate,
+            simulation_time=self.hp.spike_simulation_time,
+            dt=self.hp.spike_dt
+        )
+        
+        # Step 3: 入力層LIF活性化
+        # スパイク列 [n_timesteps, 1568] → 発火率 [1568]
+        input_activity = self._lif_activation_input_layer(
+            spike_trains=spike_trains,
+            neuron_types=self.input_neuron_types,
+            simulation_time=self.hp.spike_simulation_time,
+            dt=self.hp.spike_dt
+        )
+        
+        # Step 4: 発火率を隠れ層に伝播（従来のシグモイド処理）
+        # GPU対応: 入力データをGPUに転送（1回のみ）
+        if self.use_gpu:
+            inputs_gpu = input_activity  # 既にGPU配列
+        else:
+            inputs_gpu = input_activity
+        
+        for n in range(self.output_units):
+            for t in range(self.time_loops):
+                layer_outputs = []
+                current_layer_output = inputs_gpu.copy() if self.use_gpu else input_activity.copy()
                 
-                outputs[n] = self.layer_outputs[n][-1][0]
+                for layer_idx, layer_weight in enumerate(self.layer_weights[n]):
+                    # GPU最適化: 重み行列は既にGPU上にあるので転送不要
+                    linear_out = layer_weight @ current_layer_output
+                    activated = self._sigmoid_vectorized(linear_out)
+                    
+                    # GPU→CPUに戻す（layer_outputsはNumPy配列として保存）
+                    if self.use_gpu:
+                        layer_outputs.append(np.array(activated) if not hasattr(activated, 'get') else activated.get())
+                    else:
+                        layer_outputs.append(activated)
+                    
+                    current_layer_output = activated
+                
+                if t == self.time_loops - 1:
+                    self.layer_outputs[n] = layer_outputs
+            
+            outputs[n] = self.layer_outputs[n][-1][0]
         
         return outputs
     
